@@ -874,33 +874,33 @@ function HistoryCard({ transaction, index }) {
 
 
         <div className="sb-history-detail-row">
-  <span className="sb-history-detail-label">Package Limit</span>
-  <span>
-    <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
-      {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
-    </span>
-  </span>
-</div>
+          <span className="sb-history-detail-label">Package Limit</span>
+          <span>
+            <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
+              {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+            </span>
+          </span>
+        </div>
 
 
 
-       {/* Details Section - Redesigned */}
-{/* Details Section - Simple Clean */}
-<div className="sb-details-clean">
-  <div className="sb-detail-row">
-    <span className="sb-detail-label">Activated By</span>
-    <span className="sb-detail-value">
-      {transaction.AuthLogin || 'Welcome'}
-    </span>
-  </div>
+        {/* Details Section - Redesigned */}
+        {/* Details Section - Simple Clean */}
+        <div className="sb-details-clean">
+          <div className="sb-detail-row">
+            <span className="sb-detail-label">Activated By</span>
+            <span className="sb-detail-value">
+              {transaction.AuthLogin || 'Welcome'}
+            </span>
+          </div>
 
-  <div className="sb-detail-row">
-    <span className="sb-detail-label">Date</span>
-    <span className="sb-detail-value">
-      {formatDate(transaction.OrderDate)}
-    </span>
-  </div>
-</div>
+          <div className="sb-detail-row">
+            <span className="sb-detail-label">Date</span>
+            <span className="sb-detail-value">
+              {formatDate(transaction.OrderDate)}
+            </span>
+          </div>
+        </div>
 
 
         {/* Bottom Stats */}
