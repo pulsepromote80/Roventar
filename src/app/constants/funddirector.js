@@ -179,7 +179,7 @@ export const fundDirectorTabs = [
   { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "deposit", label: "Self Deposit" },
   // { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "fundRequest", label: "Fund Request" },
   { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "instant", label: "Income Transfer" },
-  { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "userTransfer", label: "P2P Transfer" },
+  // { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "userTransfer", label: "P2P Transfer" },
   { img: "https://imagedelivery.net/nq9qT5FHZv9Sg48UUnD1-A/bd85e7b8-c7c1-4ab2-10fa-2893f5027900/public", id: "withdraw", label: "Withdrawal" },
 ];
 

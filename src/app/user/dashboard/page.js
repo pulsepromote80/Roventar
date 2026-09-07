@@ -1103,15 +1103,15 @@ export default function DashboardPage() {
               <div className="dx-card h-100">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div className="dx-card-title">Accelerator Boost Milestone</div>
-
+                  <span className="dx-badge-soft">Qualify: {dashboardData?.[0]?.Ac_BoostRank || "N/A"}</span>
                 </div>
 
                 <div className="d-flex justify-content-center my-3 position-relative">
                   <CircularGauge
                     percent={rankLevels.find(r => r.status === 'current')?.progress || 0}
                     size={110} stroke={9} colorFrom="#5eead4" colorTo="#0d9488" gradId="rankGrad"
-                    centerTop={dashboardData?.[0]?.Ac_BoostRank || 'N/A'}
-                    centerBottom={`${(dashboardData?.[0]?.ac_totalQualifyBoot || 0) * 100}%`}
+                    centerTop={dashboardData?.[0]?.Ac_NextRank || 'N/A'}
+                    centerBottom={`Progress`}
                   />
                 </div>
 
@@ -1121,7 +1121,7 @@ export default function DashboardPage() {
                     <div className="fw-bold" style={{ color: "#14b8a6" }}>${(dashboardData?.[0]?.ActiveInvestMent || 0).toFixed(2) || "0.00"}</div>
                   </div>
                   <div className="col-4">
-                    <div className="dx-mini-stat-label">2X</div>
+                    <div className="dx-mini-stat-label">As Per Package</div>
                     <div className="fw-bold" style={{ color: "#f59e0b" }}>${(dashboardData?.[0]?.InvestmenELimit || 0).toFixed(2) || "0.00"}</div>
                   </div>
                   <div className="col-4">
@@ -1161,69 +1161,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* GROWTH REWARDS BANNER */}
-
-          <div className="dx-growth-banner mb-4">
-            <div className="row align-items-center g-3">
-              <div className="col-lg-8">
-                <div className="dx-eyebrow-light mb-1">Your Growth Reward Journey</div>
-                <div className="dx-growth-titleL"> {dashboardData?.[0]?.UserRank ?? 0} — ${dashboardData?.[0]?.QualifyRewardAmt ?? 0}</div>
-                <div className="row g-3 mt-2">
-                  <div className="col-4">
-                    <div className="dx-growth-label">Next Rank Business</div>
-                    <div className="dx-growth-value">${dashboardData?.[0]?.NextRewardBusReq ?? 0}</div>
-                  </div>
-                  <div className="col-4">
-                    <div className="dx-growth-label">Remaining Power</div>
-                    <div className="dx-growth-value">${dashboardData?.[0]?.RewardPendingPowerTeam ?? 0}</div>
-                  </div>
-                  <div className="col-4">
-                    <div className="dx-growth-label">Remaining Weaker</div>
-                    <div className="dx-growth-value">${dashboardData?.[0]?.RewardPendingWeakerTeam ?? 0}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-4 d-flex justify-content-center">
-                <CircularGauge
-                  percent={rankPct}
-                  size={132}
-                  stroke={10}
-                  colorFrom="#5eead4"
-                  colorTo="#14b8a6"
-                  gradId="growthGrad"
-                  centerTop={`${rankPct}%`}
-                  centerBottom={`${dashboardData?.[0]?.NextRank || 'V1'} Progress`}
-                />
-              </div>
-            </div>
-            <div className="dx-card mt-4">
-              <div className="dx-stepper mb-4">
-                {growthLevels.map((g, i) => (
-                  <div className="dx-stepper-item" key={g.level}>
-                    <div className={`dx-stepper-dot ${i < activeGrowthIdx ? 'done' : ''}`}>
-                      {i < activeGrowthIdx ? (
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                          <polyline points="2,8 5.5,11.5 14,3.5" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      ) : g.level}
-                    </div>
-                    {i < growthLevels.length - 1 && <div className={`dx-stepper-line ${i < activeGrowthIdx - 1 ? 'done' : ''}`}></div>}
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            <div className="row g-3 mb-4">
-              <div className="col-12">
-
-
-
-              </div>
-            </div>
-          </div>
-
-          {/* NETWORK PERFORMANCE DASHBOARD */}
+           {/* NETWORK PERFORMANCE DASHBOARD */}
           <div className="dx-section-head mb-3">
             <h5 className="dx-section-title">Leadership Reward</h5>
             <div className="dx-section-sub">15-Day Team Performance</div>
@@ -1305,6 +1243,70 @@ export default function DashboardPage() {
 
             </div>
           </div>
+
+          {/* GROWTH REWARDS BANNER */}
+
+          <div className="dx-growth-banner mb-4">
+            <div className="row align-items-center g-3">
+              <div className="col-lg-8">
+                <div className="dx-eyebrow-light mb-1">Your Growth Reward Journey</div>
+                <div className="dx-growth-titleL"> {dashboardData?.[0]?.UserRank ?? 0} — ${dashboardData?.[0]?.QualifyRewardAmt ?? 0}</div>
+                <div className="row g-3 mt-2">
+                  <div className="col-4">
+                    <div className="dx-growth-label">Next Rank Business</div>
+                    <div className="dx-growth-value">${dashboardData?.[0]?.NextRewardBusReq ?? 0}</div>
+                  </div>
+                  <div className="col-4">
+                    <div className="dx-growth-label">Remaining Power</div>
+                    <div className="dx-growth-value">${dashboardData?.[0]?.RewardPendingPowerTeam ?? 0}</div>
+                  </div>
+                  <div className="col-4">
+                    <div className="dx-growth-label">Remaining Weaker</div>
+                    <div className="dx-growth-value">${dashboardData?.[0]?.RewardPendingWeakerTeam ?? 0}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 d-flex justify-content-center">
+                <CircularGauge
+                  percent={rankPct}
+                  size={132}
+                  stroke={10}
+                  colorFrom="#5eead4"
+                  colorTo="#14b8a6"
+                  gradId="growthGrad"
+                  centerTop={`${rankPct}%`}
+                  centerBottom={`${dashboardData?.[0]?.NextRank || 'V1'} Progress`}
+                />
+              </div>
+            </div>
+            <div className="dx-card mt-4">
+              <div className="dx-stepper mb-4">
+                {growthLevels.map((g, i) => (
+                  <div className="dx-stepper-item" key={g.level}>
+                    <div className={`dx-stepper-dot ${i < activeGrowthIdx ? 'done' : ''}`}>
+                      {i < activeGrowthIdx ? (
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <polyline points="2,8 5.5,11.5 14,3.5" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : g.level}
+                    </div>
+                    {i < growthLevels.length - 1 && <div className={`dx-stepper-line ${i < activeGrowthIdx - 1 ? 'done' : ''}`}></div>}
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+            <div className="row g-3 mb-4">
+              <div className="col-12">
+
+
+
+              </div>
+            </div>
+          </div>
+
+         
 
           {/* INCOME OVERVIEW */}
           <div className="dx-section-head mb-3">

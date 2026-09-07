@@ -60,7 +60,7 @@ export default function FundDirector() {
         {activeTab === "deposit" && <SelfDeposit />}
         {/* {activeTab === "fundRequest" && <FundRequest />} */}
         {activeTab === "instant" && <InstantTransfer />}
-        {activeTab === "userTransfer" && <UserTransfer />}
+        {/* {activeTab === "userTransfer" && <UserTransfer />} */}
         {activeTab === "withdraw" && <WithDrawal />}
        
     </>
