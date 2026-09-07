@@ -101,6 +101,23 @@ export default function DashboardPage() {
     return `${hours}h ${minutes}m ${seconds}s`;
   }
 
+  function formatBusinessTime(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+      const formattedSeconds = seconds.toString().padStart(2, '0');
+      return `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
+
   const userURID = getUserId();
 
   // Hero greeting helpers (display only)
@@ -1153,7 +1170,7 @@ export default function DashboardPage() {
             <div className="row align-items-center g-3">
               <div className="col-lg-8">
                 <div className="dx-eyebrow-light mb-1">Your Growth Reward Journey</div>
-                <div className="dx-growth-titleL"> {dashboardData?.[0]?.UserRank ?? 0} — {dashboardData?.[0]?.NextRank ?? 0}</div>
+                <div className="dx-growth-titleL"> {dashboardData?.[0]?.UserRank ?? 0} — ${dashboardData?.[0]?.QualifyRewardAmt ?? 0}</div>
                 <div className="row g-3 mt-2">
                   <div className="col-4">
                     <div className="dx-growth-label">Next Rank Business</div>
@@ -1206,6 +1223,89 @@ export default function DashboardPage() {
 
 
               </div>
+            </div>
+          </div>
+
+          {/* NETWORK PERFORMANCE DASHBOARD */}
+          <div className="dx-section-head mb-3">
+            <h5 className="dx-section-title">Leadership Reward</h5>
+            <div className="dx-section-sub">15-Day Team Performance</div>
+          </div>
+
+          <div className="quantum-network-dashboard mb-4">
+           
+
+            {/* Adaptive Grid Chassis */}
+            <div className="quantum-network-grid">
+
+              {/* Card 1: Weekly Team Deposit */}
+              <div className="quantum-network-card">
+                <div className="quantum-network-card-inner">
+                  <div className="quantum-network-icon-container net-gold p-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="quantum-net-svg">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg>
+                  </div>
+                  <div className="quantum-network-details">
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Weekly Team Deposit</span>
+                      <span className="quantum-network-value-highlight val-gold">${(dashboardData?.[0]?.weeklyTeamDeposit || 0).toFixed(2)}</span>
+                    </div>
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Weekly Strong Leg ID</span>
+                      <span className="quantum-network-value-white">{dashboardData?.[0]?.weeklyTeamStrongLegID || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Weekly Leg Performance */}
+              <div className="quantum-network-card">
+                <div className="quantum-network-card-inner">
+                  <div className="quantum-network-icon-container net-blue p-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="quantum-net-svg">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </div>
+                  <div className="quantum-network-details">
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Strong Leg Deposit</span>
+                      <span className="quantum-network-value-highlight val-blue">${(dashboardData?.[0]?.weeklyTeamDepositStrongLeg || 0).toFixed(2)}</span>
+                    </div>
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Other Leg Deposit</span>
+                      <span className="quantum-network-value-white">${(dashboardData?.[0]?.weeklyTeamDepositotherLeg || 0).toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Weekly Leadership Income */}
+              <div className="quantum-network-card">
+                <div className="quantum-network-card-inner">
+                  <div className="quantum-network-icon-container net-green p-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="quantum-net-svg">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                  </div>
+                  <div className="quantum-network-details">
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Weekly Leadership Income</span>
+                      <span className="quantum-network-value-highlight val-green">${(dashboardData?.[0]?.WeeklyLeadershipIncome || 0).toFixed(2)}</span>
+                    </div>
+                    <div className="quantum-network-metric-row">
+                      <span className="quantum-network-metric-tag">Deposit Period</span>
+                      <span className="quantum-network-value-white">{(dashboardData?.[0]?.DepositPeriod)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
