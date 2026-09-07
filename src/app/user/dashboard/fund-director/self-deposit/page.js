@@ -79,8 +79,8 @@ export default function SelfDeposit() {
       //   return;
       // }
 
-      if (usdtBalance < 10) {
-        toast.error("Sorry, the minimum required deposit is $10. Please adjust your amount to continue.");
+      if (usdtBalance < 1) {
+        toast.error("Sorry, the minimum required deposit is $1. Please adjust your amount to continue.");
         return;
       }
 
@@ -205,7 +205,7 @@ export default function SelfDeposit() {
               <ul className="notes-list">
                 <li>Only send BEP20 to this address</li>
                 <li>Make sure you are using the correct network</li>
-                <li>Minimum deposit: $10 USD equivalent</li>
+                <li>Minimum deposit: $1 USD equivalent</li>
                 <li>Deposits will be credited after network confirmation</li>
               </ul>
             </div>
