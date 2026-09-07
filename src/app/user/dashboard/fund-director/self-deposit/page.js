@@ -50,19 +50,19 @@ export default function SelfDeposit() {
     dispatch(getSelfDepsiteDetailsByURID());
   }, [dispatch]);
 
-useEffect(() => {
-  if (selfDepsiteDetailsData?.data && Array.isArray(selfDepsiteDetailsData.data)) {
-    const formattedData = selfDepsiteDetailsData.data.map((item, index) => ({
-      sno: index + 1,
-      amount: item.usdAmount,
-      status: item.status,
-      date: item.creadtedDate,
-      hash: item.transHash,
-    }));
-    setData(formattedData);
-  } else {
-  }
-}, [selfDepsiteDetailsData]);
+  useEffect(() => {
+    if (selfDepsiteDetailsData?.data && Array.isArray(selfDepsiteDetailsData.data)) {
+      const formattedData = selfDepsiteDetailsData.data.map((item, index) => ({
+        sno: index + 1,
+        amount: item.usdAmount,
+        status: item.status,
+        date: item.creadtedDate,
+        hash: item.transHash,
+      }));
+      setData(formattedData);
+    } else {
+    }
+  }, [selfDepsiteDetailsData]);
 
   const fnCopy = () => {
     toast.success("Wallet address copied to clipboard!");
@@ -129,7 +129,7 @@ useEffect(() => {
     data,
     columns,
     state: { globalFilter, pagination: { pageSize, pageIndex: 0 } },
-    onPaginationChange: () => {},
+    onPaginationChange: () => { },
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -137,82 +137,82 @@ useEffect(() => {
   });
 
   return (
-     <>
-        <div className="self-deposit-card">
-          <div className="deposit-content-wrapper">
-            <div className="qr-section">
-              <div className="qr-wrapper">
-                <div className="qr-code-container">
-                  <QRCode
-                    value={walletAddress}
-                    size={120}
-                    className="qr-code-image"
-                  />
-                  <p className="qr-code-text">
-                    Scan QR code to get wallet address
-                  </p>
-                </div>
-                <div className="balance-container">
-                  <p className="balance-label">
-                    Deposit Balance: ${Number(usdtBalance || 0).toFixed(2)}
-                  </p>
-                </div>
-                <div className="deposit-button-wrapper">
-                  <button
-                    className="deposit-btn"
-                    onClick={handleClick}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader className="loader-icon" />
-                        Processing
-                      </>
-                    ) : (
-                      "Deposit"
-                    )}
-                  </button>
-                </div>
+    <>
+      <div className="self-deposit-card">
+        <div className="deposit-content-wrapper">
+          <div className="qr-section">
+            <div className="qr-wrapper">
+              <div className="qr-code-container">
+                <QRCode
+                  value={walletAddress}
+                  size={120}
+                  className="qr-code-image"
+                />
+                <p className="qr-code-text">
+                  Scan QR code to get wallet address
+                </p>
               </div>
-            </div>
-            <div className="info-section">
-              <div>
-                <h1 className="info-label">Network</h1> 
-                  <span className="network-badge">Binance Smart Chain</span>
-                </div> 
-              <div className="wallet-section">
-  <p className="info-label">Wallet Address</p>
-
-  <div className="wallet-address-wrapper">
-    <span
-      className="wallet-address-text"
-      title={walletAddress}
-    >
-      {walletAddress}
-    </span>
-
-    <button
-      type="button"
-      onClick={fnCopy}
-      className="ann-badge copy-icon"
-    >
-      <FaRegCopy />
-    </button>
-  </div>
-</div>
-              <div className="important-notes">
-                <p className="notes-title">Important Notes:</p>
-                <ul className="notes-list">
-                  <li>Only send BEP20 to this address</li>
-                  <li>Make sure you are using the correct network</li>
-                  <li>Minimum deposit: $10 USD equivalent</li>
-                  <li>Deposits will be credited after network confirmation</li>
-                </ul>
+              <div className="balance-container">
+                <p className="balance-label">
+                  Deposit Balance: ${Number(usdtBalance || 0).toFixed(2)}
+                </p>
+              </div>
+              <div className="deposit-button-wrapper">
+                <button
+                  className="deposit-btn"
+                  onClick={handleClick}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader className="loader-icon" />
+                      Processing
+                    </>
+                  ) : (
+                    "Deposit"
+                  )}
+                </button>
               </div>
             </div>
           </div>
+          <div className="info-section">
+            <div>
+              <h1 className="info-label">Network</h1>
+              <span className="network-badge">Binance Smart Chain</span>
+            </div>
+            <div className="wallet-section">
+              <p className="info-label">Wallet Address</p>
+
+              <div className="wallet-address-wrapper">
+                <span
+                  className="wallet-address-text"
+                  title={walletAddress}
+                >
+                  {walletAddress}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={fnCopy}
+                  className="ann-badge copy-icon"
+                >
+                  <FaRegCopy />
+                </button>
+              </div>
+            </div>
+            <div className="important-notes">
+              <p className="notes-title">Important Notes:</p>
+              <ul className="notes-list">
+                <li>Only send BEP20 to this address</li>
+                <li>Make sure you are using the correct network</li>
+                <li>Minimum deposit: $10 USD equivalent</li>
+                <li>Deposits will be credited after network confirmation</li>
+              </ul>
+            </div>
+          </div>
         </div>
-       
+      </div>
+
 
       <div className="deposit-records-container">
         <div className="deposit-records-wrapper">
@@ -294,9 +294,9 @@ useEffect(() => {
                           ) : (
                             flexRender(cell.column.columnDef.cell, cell.getContext())
                           )}
-                         </td>
+                        </td>
                       ))}
-                     </tr>
+                    </tr>
                   ))
                 ) : (
                   <tr>
@@ -344,7 +344,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div> 
-      </>
+      </div>
+    </>
   );
 }
