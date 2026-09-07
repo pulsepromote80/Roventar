@@ -694,6 +694,61 @@ const styles = `
       padding: 10px 12px;
     }
   }
+    /* ===== DETAILS CLEAN ===== */
+.sb-details-clean {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--sb-bg-2);
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm);
+}
+
+.sb-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-detail-row:first-child {
+  border-right: 1px solid var(--sb-border);
+  padding-right: 10px;
+}
+
+.sb-detail-row:last-child {
+  padding-left: 10px;
+}
+
+.sb-detail-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--sb-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sb-detail-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sb-text-1);
+}
+
+@media (max-width: 400px) {
+  .sb-details-clean {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .sb-detail-row:first-child {
+    border-right: none;
+    padding-right: 0;
+  }
+  
+  .sb-detail-row:last-child {
+    padding-left: 0;
+  }
+}
 `;
 
 /* =========================
@@ -819,34 +874,33 @@ function HistoryCard({ transaction, index }) {
 
 
         <div className="sb-history-detail-row">
-          <span className="sb-history-detail-label"> Package Limit</span>
-          <span>
-            <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
-              {transaction.PackageName || 'Basic'}
-            </span>
-          </span>
-        </div>
+  <span className="sb-history-detail-label">Package Limit</span>
+  <span>
+    <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
+      {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+    </span>
+  </span>
+</div>
 
 
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-          {/* Activated By */}
-          <div className="sb-history-detail-row">
-            <span className="sb-history-detail-label">Activated By</span>
-            <span className="sb-history-detail-value" style={{ fontSize: '12px' }}>
-              {transaction.AuthLogin || 'Welcome'}
-            </span>
-          </div>
+       {/* Details Section - Redesigned */}
+{/* Details Section - Simple Clean */}
+<div className="sb-details-clean">
+  <div className="sb-detail-row">
+    <span className="sb-detail-label">Activated By</span>
+    <span className="sb-detail-value">
+      {transaction.AuthLogin || 'Welcome'}
+    </span>
+  </div>
 
-          <div className="sb-history-detail-row">
-            <span className="sb-history-detail-label">Date</span>
-            <span className="sb-history-detail-value" style={{ fontSize: '11px' }}>
-              {formatDate(transaction.OrderDate)}
-            </span>
-          </div>
-
-
-        </div>
+  <div className="sb-detail-row">
+    <span className="sb-detail-label">Date</span>
+    <span className="sb-detail-value">
+      {formatDate(transaction.OrderDate)}
+    </span>
+  </div>
+</div>
 
 
         {/* Bottom Stats */}
