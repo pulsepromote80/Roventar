@@ -872,10 +872,7 @@ export default function DashboardPage() {
 
   // Recent achievements — replace with API rows when available
   const recentAchievements = [
-    { title: 'Trading Package Activated', sub: 'Elite package unlocked full benefits' },
-    { title: 'Growth Reward G2 Achieved', sub: '₹10,000 reward credited' },
-    { title: '100 Active Team Members', sub: 'Team milestone reached' },
-    { title: `Accelerator ${dashboardData?.[0]?.UserRank || 'V1'} Achieved`, sub: 'First rank unlocked' },
+    { title: `${dashboardData?.[0]?.News || 'V1'}`},
   ];
 
   return (
@@ -1250,11 +1247,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="quantum-network-details">
                     <div className="quantum-network-metric-row">
-                      <span className="quantum-network-metric-tag">Weekly Team Deposit</span>
+                      <span className="quantum-network-metric-tag">Team Deposit</span>
                       <span className="quantum-network-value-highlight val-gold">${(dashboardData?.[0]?.weeklyTeamDeposit || 0).toFixed(2)}</span>
                     </div>
                     <div className="quantum-network-metric-row">
-                      <span className="quantum-network-metric-tag">Weekly Strong Leg ID</span>
+                      <span className="quantum-network-metric-tag">Strong Leg ID</span>
                       <span className="quantum-network-value-white">{dashboardData?.[0]?.weeklyTeamStrongLegID || 0}</span>
                     </div>
                   </div>
@@ -1295,7 +1292,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="quantum-network-details">
                     <div className="quantum-network-metric-row">
-                      <span className="quantum-network-metric-tag">Weekly Leadership Income</span>
+                      <span className="quantum-network-metric-tag">Leadership Income</span>
                       <span className="quantum-network-value-highlight val-green">${(dashboardData?.[0]?.WeeklyLeadershipIncome || 0).toFixed(2)}</span>
                     </div>
                     <div className="quantum-network-metric-row">
@@ -1678,8 +1675,8 @@ export default function DashboardPage() {
             <div className="col-lg-4">
               <div className="dx-card h-100">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <div className="dx-card-title">Recent Achievements</div>
-                  <span className="dx-badge-soft">{recentAchievements.length}</span>
+                  <div className="dx-card-title"> 📢 Announcement</div>
+                  
                 </div>
                 <div className="d-flex flex-column gap-2">
                   {recentAchievements.map((a) => (
@@ -1690,7 +1687,7 @@ export default function DashboardPage() {
                         </svg>
                       </div>
                       <div>
-                        <div className="dx-achieve-title">{a.title}</div>
+                        <div className="dx-achieve-title" dangerouslySetInnerHTML={{ __html: a.title }}></div>
                         <div className="dx-achieve-sub">{a.sub}</div>
                       </div>
                     </div>
