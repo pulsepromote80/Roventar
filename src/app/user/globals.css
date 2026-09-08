@@ -1725,8 +1725,16 @@ html .topbar .tb-r { position: relative; z-index: 10001; }
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: inherit;
+  color: var(--brand-cyan);
   cursor: pointer;
+}
+
+html[data-theme="light"] .ecosystem-link {
+  color: #0d8a84;
+}
+
+html[data-theme="dark"] .ecosystem-link {
+  color: #2fd9d3;
 }
 
 .ecosystem-link:hover span {

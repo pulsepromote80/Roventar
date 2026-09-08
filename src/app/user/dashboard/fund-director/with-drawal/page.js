@@ -279,7 +279,9 @@ const WithdrawalRequest = () => {
         const withdrawalSuccess = await fnSendWithdrawalRequest(values);
 
         if (withdrawalSuccess) {
+          const walletAddress = formik.values.walletAddress;
           resetForm();
+          formik.setFieldValue("walletAddress", walletAddress);
           setWalletType("Select Wallet");
           setPendingWithdrawalData(null);
         }

@@ -302,7 +302,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     const refLink = referralLink || `https://roventar.com/user/register?ref=${userID || "XO5599007"}`;
     // Remove Position parameter from the link if present
     const cleanLink = refLink.split('&Position=')[0];
-    const text = `Join me on Roventar - earn up to 8% commission! My ID: ${userID}`;
+    const text = `Join me on Roventar - earn up to 5% commission! My ID: ${userID}`;
 
     let url = "";
     switch (platform) {
@@ -514,17 +514,6 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                 }}
               >
                 <span>{userID}</span>
-
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "#64748B",
-                    fontWeight: "500",
-                    marginTop: "1px",
-                  }}
-                >
-                  {dashboardData?.[0]?.UserRank}
-                </span>
               </div>
             </button>
             <div>
@@ -661,7 +650,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   Invite &amp; <span style={{ color: "#a78bfa" }}>Earn</span>
                 </div>
                 <div style={{ fontSize: "11.5px", color: "var(--t2)", lineHeight: 1.6 }}>
-                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>8% commission</strong> on every trade — 3 levels deep, paid daily
+                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>5% commission</strong> on every trade — 3 levels deep, paid daily
                 </div>
               </div>
 

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserDashboardDetails } from "../../redux/slices/authSlice";
 import Link from "next/link";
 import { FiExternalLink } from "react-icons/fi";
+import { useTheme } from "../../../components/ThemeProvider";
 
 export default function RankProgress({
   totQualifyRnk = 0,
@@ -15,6 +16,7 @@ export default function RankProgress({
 }) {
   const dispatch = useDispatch();
   const [dashboardData, setDashboardData] = useState(null);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const fetchDashboardDetails = async () => {
@@ -62,7 +64,7 @@ export default function RankProgress({
     hero: {
       background:
         "linear-gradient(120deg, var(--bg-card, #ffffff) 0%, var(--bg-card, #ffffff) 45%, var(--bg-2, #f1fbfa) 100%)",
-      border: "1px solid #ddebec",
+      border: "1px solid var(--border, #ddebec)",
       borderRadius: "1.5rem",
       overflow: "hidden",
       boxShadow: "0 1px 2px var(--shadow, rgba(16,40,60,0.04))",
@@ -164,7 +166,7 @@ export default function RankProgress({
               <span>ROVENTAR ECOSYSTEM</span>
             </div> */}
             <div style={styles.eyebrow}>
-              <Link href="#" className="ecosystem-link">
+              <Link href="https://www.roventartrade.com" className="ecosystem-link" target="_blank">
                 <div className="dx-avatar">
                   {/* <TrophyIcon /> */}
                   <FiExternalLink className="redirect-icon" />
@@ -172,7 +174,7 @@ export default function RankProgress({
 
                 <span>ROVENTAR TRADE</span>
 
-                {/* <FiExternalLink className="redirect-icon" /> */}
+               
               </Link>
             </div>
 
@@ -241,7 +243,7 @@ export default function RankProgress({
           <div style={styles.right}>
             <img
               // src="/banner-img.png"
-              src="/banner2.png"
+              src={isDark ? "/banner3.webp" : "/banner2.webp"}
               alt={apiRank || "Rank"}
               className="Rank-img rpc-rankImg"
               style={{ width: "100%", maxWidth: "500px", height: "auto" }}
