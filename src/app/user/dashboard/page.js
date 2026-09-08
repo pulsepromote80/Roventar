@@ -397,7 +397,7 @@ export default function DashboardPage() {
 
   const shareOn = (platform) => {
     const refLink = "https://arbion.ai/ref/ARB-a9x7k2-premium";
-    const text = "Join me on Roventar AI Engine - earn up to 8% commission!";
+    const text = "Join me on Roventar AI Engine - earn up to 5% commission!";
     let url = "";
     switch (platform) {
       case "WhatsApp":
