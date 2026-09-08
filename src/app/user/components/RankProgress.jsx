@@ -241,9 +241,10 @@ export default function RankProgress({
           <div style={styles.right}>
             <img
               // src="/banner-img.png"
-              src="/banner1.png"
+              src="/banner2.png"
               alt={apiRank || "Rank"}
               className="Rank-img rpc-rankImg"
+              style={{ width: "100%", maxWidth: "500px", height: "auto" }}
             />
           </div>
         </div>
