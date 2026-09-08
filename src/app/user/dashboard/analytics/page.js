@@ -167,7 +167,7 @@ export default function ArbionEngine() {
 
     // Total Profit - ALL trades (profit + loss)
     const totalProfit = tradeHistory.reduce((sum, trade) => {
-      return sum + (parseFloat(trade.Profit) || 0);
+      return sum + (parseFloat(trade.TotalProfit) || 0);
     }, 0);
    
 
@@ -538,7 +538,8 @@ export default function ArbionEngine() {
                   <th>Asset / Pair</th>
                   <th>Action</th>
                   <th>PnL %</th>
-                  <th>Profit</th>
+                  <th>Yours Profit</th>
+                  <th>Total Profit</th>
                   <th>Portfolio Value</th>
                   <th>Status</th>
                 </tr>
@@ -591,7 +592,9 @@ export default function ArbionEngine() {
                         <td className={isProfit ? 'th-up' : 'th-down'}>
                           {isProfit ? '+' : ''}${profit}
                         </td>
+                        <td className="th-mono">{t?.TotalProfit ?? '-'}</td>
                         <td className="th-mono">{t?.PortfolioValue ?? '-'}</td>
+                        
                         <td>
                           <span className={`th-status ${(t?.Status || 'Closed').toLowerCase()}`}>
                             {t?.Status || 'Closed'}

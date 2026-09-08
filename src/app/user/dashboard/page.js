@@ -1150,7 +1150,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="col-4">
                     <div className="dx-mini-stat-label">Max Limit</div>
-                    <div className="fw-bold" style={{ color: "#f59e0b" }}>${(dashboardData?.[0]?.EarningLimit || 0).toFixed(2) || "0.00"}</div>
+                    <div className="fw-bold" style={{ color: "#f59e0b" }}>${(dashboardData?.[0]?.GrandincomeLimit || 0).toFixed(2) || "0.00"}</div>
                   </div>
                   <div className="col-4">
                     <div className="dx-mini-stat-label">Remaining</div>
