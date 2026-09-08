@@ -1047,11 +1047,11 @@ export default function InvestmentHistory() {
     return matchesSearch && matchesStatus && matchesPackage;
   });
 
-  // Get unique packages for filter
+  // Get unique packages for filter  
   const getUniquePackages = () => {
     const packages = new Set();
     transactions.forEach(item => {
-      if (item.PackageName) packages.add(item.PackageName);
+      if (item.PackageName) packages.add(item.PackageName.split(',')[0].trim());
     });
     return Array.from(packages);
   };
