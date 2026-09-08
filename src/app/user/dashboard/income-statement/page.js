@@ -54,7 +54,6 @@ export default function IncomeStatement() {
       urid: item.URID,
       date: item.CreatedDate,
       credit: Number(item.credit || 0),
-      debit: Number(item.debit || 0),
       transType: item.transType,
       remark: item.Remark || '',
       statusCode: item.statusCode,
@@ -158,7 +157,6 @@ export default function IncomeStatement() {
                   <th>#</th>
                   <th>Date</th>
                   <th>Credit (USD)</th>
-                  <th>Debit (USD)</th>
                   <th>Remarks / Description</th>
                   <th>Status</th>
                 </tr>
@@ -176,7 +174,6 @@ export default function IncomeStatement() {
                       <td>{startIndex + idx + 1}</td>
                       <td>{item.date}</td>
                       <td className="credit-positive">${Number(item.credit).toFixed(4)}</td>
-                      <td className="debit-negative">${Number(item.debit).toFixed(4)}</td>
                       <td className="remark-text" title={item.remark}>{item.remark}</td>
                       <td>
                         <span className={`status-badge status-${item.statusCode}`}>
