@@ -173,12 +173,11 @@ function useLiveMarket() {
 }
 
 /* =========================
-   STATIC DATA
+   BOT MAPPING CONFIGURATION
 ========================= */
 
-const bots = [
-  {
-    name: "SONIC SCALPER AI",
+const botConfig = {
+  "SONIC SCALPER AI": {
     subtitle: "Scalping Strategy",
     icon: "🤖",
     iconBg: "sb-icon-blue",
@@ -193,13 +192,8 @@ const bots = [
     timeframe: "5M",
     market: "Forex",
     myfxbookLink: "https://www.myfxbook.com/members/SonicExperts/sonic-ai/12076857",
-
-    apr: "19.8%",
-    winRate: "71.3%",
-    traders: "2,341",
   },
-  {
-    name: "REVOLUT AI",
+  "Revolut AI": {
     subtitle: "Trend Following Strategy",
     icon: "🧠",
     iconBg: "sb-icon-purple",
@@ -214,13 +208,8 @@ const bots = [
     timeframe: "15M",
     market: "Forex",
     myfxbookLink: "https://www.myfxbook.com/members/SonicExperts/sonic-ai/12076857",
-
-    apr: "21.4%",
-    winRate: "68.9%",
-    traders: "1,892",
   },
-  {
-    name: "PHANTOM STEALTH AI",
+  "Phantom Stealth AI": {
     subtitle: "Grid Trading Strategy",
     icon: "🥷",
     iconBg: "sb-icon-orange",
@@ -235,13 +224,8 @@ const bots = [
     timeframe: "1H",
     market: "Forex",
     myfxbookLink: "https://www.myfxbook.com/lv/members/pg_forexoffecial/phantom-bot/12073391",
-
-    apr: "15.2%",
-    winRate: "63.1%",
-    traders: "1,276",
   },
-  {
-    name: "PIP SNIPER AI",
+  "Pip Sniper AI": {
     subtitle: "Breakout Strategy",
     icon: "🎯",
     iconBg: "sb-icon-green",
@@ -257,12 +241,8 @@ const bots = [
     market: "Forex",
     risk: "Medium",
     myfxbookLink: "https://www.myfxbook.com/members/MT4Sniper/pip-sniper/9468462",
-
-    winRate: "72.6%",
-    traders: "1,654",
   },
-  {
-    name: "GOLD RUSH AI",
+  "Gold Rush AI": {
     subtitle: "Gold Trading Strategy",
     icon: "🪙",
     iconBg: "sb-icon-yellow",
@@ -277,12 +257,66 @@ const bots = [
     timeframe: "15M",
     market: "Commodities",
     myfxbookLink: "https://www.myfxbook.com/members/FXEAMASTER/gold-rush/9875023",
-
-    apr: "23.6%",
-    winRate: "70.4%",
-    traders: "987",
   },
-];
+
+  
+};
+
+// Default config for unknown products
+const defaultConfig = {
+  subtitle: "AI Trading Strategy",
+  icon: "🤖",
+  iconBg: "sb-icon-blue",
+  symbols: ["EUR/USD", "GBP/USD"],
+  chartColor: "#2563eb",
+  rsi: "50.0",
+  macd: "Neutral",
+  trend: "Sideways",
+  signal: "BUY",
+  signalSymbol: "EUR/USD",
+  confidence: "50%",
+  timeframe: "15M",
+  market: "Forex",
+  myfxbookLink: "https://www.myfxbook.com",
+};
+
+// Function to map API data to bot structure
+const mapApiDataToBots = (activeProducts) => {
+  if (!activeProducts || !Array.isArray(activeProducts)) return [];
+
+  return activeProducts.map((product) => {
+    const config = botConfig[product.productName] || defaultConfig;
+
+    return {
+      id: product.productId,
+      name: product.productName,
+      subtitle: config.subtitle,
+      icon: config.icon,
+      iconBg: config.iconBg,
+      symbols: config.symbols,
+      chartColor: config.chartColor,
+      rsi: config.rsi,
+      macd: config.macd,
+      trend: config.trend,
+      signal: config.signal,
+      signalSymbol: config.signalSymbol,
+      confidence: config.confidence,
+      timeframe: config.timeframe,
+      market: config.market,
+      myfxbookLink: config.myfxbookLink,
+      risk: config.risk,
+      // API data
+      apr: `${product.roi}%`,
+      winRate: `${product.winrate}%`,
+      traders: product.traders?.toLocaleString() || "0",
+      type: product.type,
+      minInvest: product.mininvest,
+      categoryId: product.categoryId,
+      categoryName: product.categoryName,
+      description: product.tittle,
+    };
+  });
+};
 
 /* =========================
    MINI CHART
@@ -2321,6 +2355,9 @@ export default function SonicScalper() {
   const [cssLoaded, setCssLoaded] = useState(false);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
+  // Map API data to bots structure
+  const bots = mapApiDataToBots(activeProductsData);
+
   // Inject styles
   useEffect(() => {
     const styleEl = document.createElement('style');
@@ -2375,6 +2412,11 @@ export default function SonicScalper() {
       localStorage.setItem('theme', 'light');
     }
   };
+
+  // Fetch active products
+  useEffect(() => {
+    dispatch(getActiveProducts());
+  }, [dispatch]);
 
   // Fetch wallet balance
   useEffect(() => {
@@ -3166,6 +3208,7 @@ export default function SonicScalper() {
 
   // Handle investment submission
   const handleInvestSubmit = async ({ uid, uname, userURID, amount, bot }) => {
+    console.log("TTT",bot)
     setIsProcessing(true);
 
     try {

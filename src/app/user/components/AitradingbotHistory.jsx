@@ -874,7 +874,7 @@ function HistoryCard({ transaction, index }) {
 
 
         <div className="sb-history-detail-row">
-          <span className="sb-history-detail-label">Package Limit</span>
+          <span className="sb-history-detail-label">Package</span>
           <span>
             <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
               {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
@@ -887,20 +887,21 @@ function HistoryCard({ transaction, index }) {
         {/* Details Section - Redesigned */}
         {/* Details Section - Simple Clean */}
         <div className="sb-details-clean">
-          <div className="sb-detail-row">
+          
             <span className="sb-detail-label">Activated By</span>
             <span className="sb-detail-value">
               {transaction.AuthLogin || 'Welcome'}
             </span>
-          </div>
+          
 
-          <div className="sb-detail-row">
             <span className="sb-detail-label">Date</span>
             <span className="sb-detail-value">
               {formatDate(transaction.OrderDate)}
             </span>
-          </div>
+         
+         
         </div>
+        
 
 
         {/* Bottom Stats */}
@@ -919,9 +920,9 @@ function HistoryCard({ transaction, index }) {
             </p>
           </div>
           <div className="sb-history-stat-item">
-            <p className="sb-history-stat-label">Type</p>
+            <p className="sb-history-stat-label">Limit</p>
             <p className="sb-history-stat-value" style={{ color: 'var(--sb-amber)' }}>
-              {transaction.PackageName || 'Standard'}
+              {transaction.PackageName ? transaction.PackageName.split(',')[1].trim() : 'Basic'}
             </p>
           </div>
         </div>
