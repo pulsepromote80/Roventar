@@ -280,12 +280,56 @@ const defaultConfig = {
   myfxbookLink: "https://www.myfxbook.com",
 };
 
-// Function to map API data to bot structure
+
+const getBotConfig = (productName) => {
+  if (!productName) return defaultConfig;
+  
+  const searchName = productName.trim();
+  
+
+  if (botConfig[searchName]) {
+    return botConfig[searchName];
+  }
+  
+
+  const upperName = searchName.toUpperCase();
+  for (const key of Object.keys(botConfig)) {
+    if (key.toUpperCase() === upperName) {
+      return botConfig[key];
+    }
+  }
+  
+
+  for (const key of Object.keys(botConfig)) {
+    const keyUpper = key.toUpperCase();
+    if (upperName.includes(keyUpper) || keyUpper.includes(upperName)) {
+      return botConfig[key];
+    }
+  }
+  
+  // 4. Remove common words and match
+  const cleanName = searchName.replace(/AI|BOT|STRATEGY|TRADING/gi, '').trim().toUpperCase();
+  for (const key of Object.keys(botConfig)) {
+    const cleanKey = key.replace(/AI|BOT|STRATEGY|TRADING/gi, '').trim().toUpperCase();
+    if (cleanName === cleanKey) {
+      return botConfig[key];
+    }
+  }
+  
+  // 5. Log karo ki match nahi mila
+  console.log('❌ No match found for:', searchName);
+  console.log('Available keys:', Object.keys(botConfig));
+  
+  return defaultConfig;
+};
+
+
 const mapApiDataToBots = (activeProducts) => {
   if (!activeProducts || !Array.isArray(activeProducts)) return [];
 
+
   return activeProducts.map((product) => {
-    const config = botConfig[product.productName] || defaultConfig;
+    const config = getBotConfig(product.productName);
 
     return {
       id: product.productId,
@@ -303,9 +347,8 @@ const mapApiDataToBots = (activeProducts) => {
       confidence: config.confidence,
       timeframe: config.timeframe,
       market: config.market,
-      myfxbookLink: config.myfxbookLink,
-      risk: config.risk,
-      // API data
+      myfxbookLink: config.myfxbookLink,  
+      risk: config.risk || "Medium",
       apr: `${product.roi}%`,
       winRate: `${product.winrate}%`,
       traders: product.traders?.toLocaleString() || "0",
@@ -318,9 +361,7 @@ const mapApiDataToBots = (activeProducts) => {
   });
 };
 
-/* =========================
-   MINI CHART
-========================= */
+
 
 function MiniChart({ data = [] }) {
   if (!data || data.length === 0) {

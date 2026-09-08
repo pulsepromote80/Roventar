@@ -140,6 +140,11 @@ const WalletStatement = () => {
     }
   };
 
+  // Calculate colSpan based on active tab
+  const getColSpan = () => {
+    return activeTab === "Withdrawal" ? 8 : 7;
+  };
+
   return (
     <div className="">
       {/* Tabs */}
@@ -207,14 +212,14 @@ const WalletStatement = () => {
                 <th>Debit</th>
                 <th>Type</th>
                 <th>Remark</th>
-                <th>TransHash</th>
+                {activeTab === "Withdrawal" && <th>TransHash</th>}  {/* 👈 Sirf Withdrawal mein */}
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="no-data">
+                  <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
                     Loading...
                   </td>
                 </tr>
@@ -227,39 +232,43 @@ const WalletStatement = () => {
                     <td className="remark-text">{item.debit ?? 0}</td>
                     <td className="status-badge status-1">{item.transType || "-"}</td>
                     <td>{item.remark || "-"}</td>
-                  <td>
-  <div className="d-flex align-items-center gap-2">
-    <span
-      title={item.transHash || "-"}
-      style={{
-        maxWidth: "180px",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        display: "inline-block"
-      }}
-    >
-      {item.transHash || "-"}
-    </span>
-
-    {item.transHash && (
-      <button
-        type="button"
-        className="btn btn-sm p-0"
-        title="Copy Transaction Hash"
-        onClick={() => navigator.clipboard.writeText(item.transHash)}
-      >
-        <i className="fa fa-copy"></i>
-      </button>
-    )}
-  </div>
-</td>
+                    
+                    {/* 👇 Sirf Withdrawal tab mein TransHash column */}
+                    {activeTab === "Withdrawal" && (
+                      <td>
+                        <div className="d-flex align-items-center gap-2">
+                          <span
+                            title={item.transHash || "-"}
+                            style={{
+                              maxWidth: "180px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              display: "inline-block"
+                            }}
+                          >
+                            {item.transHash || "-"}
+                          </span>
+                          {item.transHash && (
+                            <button
+                              type="button"
+                              className="btn btn-sm p-0"
+                              title="Copy Transaction Hash"
+                              onClick={() => navigator.clipboard.writeText(item.transHash)}
+                            >
+                              <i className="fa fa-copy"></i>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                    
                     <td className="status-badge pending-bg status-1">{item.status || "-"}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="no-data">
+                  <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
                     No records found.
                   </td>
                 </tr>
