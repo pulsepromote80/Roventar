@@ -3,9 +3,11 @@
 import Script from "next/script";
 import { useState } from "react";
 import { useEffect } from "react";
+import TradingViewWidget from "./Tradeview";
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [aiSignalConfidence, setAiSignalConfidence] = useState(87.3);
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
@@ -20,6 +22,20 @@ export default function HomePage() {
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    // Simulate AI Signal Confidence updates
+    const interval = setInterval(() => {
+      setAiSignalConfidence((prev) => {
+        // Generate a value between 75 and 95 with small variations
+        const variation = (Math.random() - 0.5) * 2; // -1 to +1
+        const newValue = Math.max(75, Math.min(95, prev + variation));
+        return Math.round(newValue * 10) / 10; // Round to 1 decimal place
+      });
+    }, 3000); // Update every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -304,11 +320,11 @@ export default function HomePage() {
             <div className="reveal-stagger grid grid-cols-3 gap-[22px] max-[980px]:!grid-cols-2 max-[640px]:!grid-cols-1">
               {[
                 ["◈", "AI Market Intelligence", "Understand market structure through AI-assisted signals, trend analysis and real-time pattern detection.", "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80"],
-                ["◎", "Forex Technology", "Access organized insights across major, minor and selected exotic currency markets.", "https://images.unsplash.com/photo-1611974765270-ca12586373bb?auto=format&fit=crop&w=900&q=80"],
+                ["◎", "Forex Technology", "Access organized insights across major, minor and selected exotic currency markets.", "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=900&q=80"],
                 ["₿", "Digital Asset Analytics", "Monitor digital asset activity with transparent pricing, market depth and consolidated data.", "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=900&q=80"],
                 ["⌁", "Portfolio Monitoring", "Track asset allocation, performance indicators and portfolio activity from one dashboard.", "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"],
                 ["↗", "Automated Execution", "Configure systematic rules and workflows that help you monitor market conditions and execute predefined actions more consistently.", "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=900&q=80"],
-                ["◉", "Secure Infrastructure", "Modern security layers help protect data, user access and platform operations.", "https://images.unsplash.com/photo-1563986768609-322da9b2a5f4?auto=format&fit=crop&w=900&q=80"],
+                ["◉", "Secure Infrastructure", "Modern security layers help protect data, user access and platform operations.", "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80"],
               ].map(([icon, title, desc, img]) => (
                 <article
                   key={title}
@@ -515,20 +531,21 @@ export default function HomePage() {
               </div>
 
               <div className="grid gap-5 [grid-template-columns:2fr_1fr] max-[900px]:!grid-cols-1">
-                <div className="border border-[rgba(140,180,200,0.14)] rounded-2xl p-5 bg-white/[0.015]">
-                  <div className="flex justify-between items-baseline mb-1.5">
-                    <h4 className="font-display font-semibold text-[1.5rem] text-[#eef3f8]">BTC / USD</h4>
-                    <span id="chartDelta" className="font-mono text-[0.85rem] text-[#22e8d4]">+2.4%</span>
+                <div className="border border-[rgba(140,180,200,0.14)] rounded-2xl bg-white/[0.015] overflow-hidden">
+                  <div className="p-5">
+                    <div className="flex justify-between items-baseline mb-1.5">
+                      <h4 className="font-display font-semibold text-[1.5rem] text-[#eef3f8]">BTC / USD</h4>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[0.85rem] text-[#22e8d4]">Live TradingView</span>
+                        <span className="w-2 h-2 rounded-full bg-[#22e8d4] animate-pulse" />
+                      </div>
+                    </div>
+                    
                   </div>
-                  <div className="text-[0.76rem] text-[#5c6c80] mb-3">Illustrative price data — for platform preview only</div>
-                  <canvas id="priceChart" className="w-full h-[220px]" />
-                  <div className="flex gap-2 mt-3.5 flex-wrap">
-                    {["Trend Detection", "Volatility Band", "AI Confidence: High"].map((tag) => (
-                      <span key={tag} className="font-mono text-[0.68rem] py-[5px] px-[11px] rounded-full border border-[rgba(140,180,200,0.14)] text-[#8ea0b5]">
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="h-[500px]">
+                    <TradingViewWidget />
                   </div>
+                 
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -558,7 +575,7 @@ export default function HomePage() {
                       <span className="text-[0.76rem] text-[#5c6c80]">AI Signal Confidence</span>
                     </div>
                     <div className="font-display text-2xl text-[#eef3f8]">
-                      87.3<span className="text-base text-[#5c6c80]">%</span>
+                      {aiSignalConfidence}<span className="text-base text-[#5c6c80]"> %</span>
                     </div>
                   </div>
                 </div>
