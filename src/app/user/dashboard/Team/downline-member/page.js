@@ -24,7 +24,7 @@ const DownlineMember = ({ isDownline = false }) => {
 
     const levelOptions = useMemo(() => {
         const levels = [];
-        for (let i = 1; i <= 15; i++) {
+        for (let i = 1; i <= 25; i++) {
             levels.push({ value: i.toString(), label: `${i}` });
         }
         return levels;

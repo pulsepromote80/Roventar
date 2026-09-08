@@ -492,6 +492,10 @@ function AIAssistant() {
     setReportData(data);
     setHasReport(true);
 
+    // Initialize trade levels with mock data as fallback
+    const initialLevels = calculateTradeLevels(data.entry, data.trend);
+    setTradeLevels(initialLevels);
+
     // Trigger gauge animation after render
     setTimeout(() => {
       const circle = gaugeCircleRef.current;

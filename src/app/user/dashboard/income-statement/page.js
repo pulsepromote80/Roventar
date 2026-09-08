@@ -13,6 +13,7 @@ const TABS = [
   'Direct Income',
   'Tier Reward',
   'Growth Reward',
+  'Leadership Income'
 ];
 
 const KEY_TO_LABEL = {
