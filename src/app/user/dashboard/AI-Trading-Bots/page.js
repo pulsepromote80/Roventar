@@ -595,7 +595,7 @@ function BotCard({ bot, marketPrices, lastUpdate, chartData, livePrice, wsConnec
             <p className="sb-stat-value">{bot.winRate}</p>
           </div>
           <div className="sb-stat-item">
-            <p className="sb-stat-label">Demo Traders</p>
+            <p className="sb-stat-label">Live Traders</p>
             <p className="sb-stat-value">{bot.traders}</p>
           </div>
         </div>

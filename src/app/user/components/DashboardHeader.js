@@ -112,7 +112,7 @@ export default function DashboardHeader({
           <span className="ic">
             <FiCpu />
           </span>
-          <span>AI Assistant Demo</span>
+          <span>AI Assistant</span>
         </Link>
       </div>
 

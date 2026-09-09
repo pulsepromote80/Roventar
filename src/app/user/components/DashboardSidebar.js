@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CiMenuFries } from "react-icons/ci";
 import { FiUser, FiHelpCircle } from "react-icons/fi";
-import { FaWhatsapp, FaFacebookF, FaInstagram, FaTelegramPlane, FaFilePdf, FaBell } from "react-icons/fa";
+import { FaWhatsapp, FaFacebookF, FaInstagram, FaTelegramPlane, FaFilePdf, FaBell, FaCloud, FaPinterest, FaYoutube } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { getUserDashboardDetails } from "../../redux/slices/authSlice";
 import { Getusernotification, updateNotificationsCount } from "../../redux/slices/ticketSlice";
@@ -45,7 +45,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
   const { userNotifications } = useSelector((state) => state.ticket);
 
   const notificationsArray = userNotifications?.notificationList || [];
- 
+
 
   const unseenNotifications = notificationsArray.filter((n) => !seenNotifications.has(n.URID) && !n.Seen);
   const actualUnseenCount = unseenNotifications.length;
@@ -82,7 +82,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     setBreadcrumb({ parent, child });
   }, [pathname]);
 
- 
+
   const getAuthLogin = () => {
     try {
       const currentUserPlain = localStorage.getItem("currentUserPlain");
@@ -163,7 +163,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     }
   }, [selectedPosition, leftUrl, rightUrl]);
 
- 
+
   useEffect(() => {
     const updatePhoneView = () => setIsPhoneView(window.innerWidth <= 1024);
     updatePhoneView();
@@ -184,14 +184,14 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     const pollNotifications = () => {
       // const URID = getUserId();
       // if (URID) {
-        dispatch(Getusernotification());
+      dispatch(Getusernotification());
       // }
     };
     pollNotifications();
     notificationPollingRef.current = setInterval(pollNotifications, 30000);
-    return () => { 
-      if (notificationPollingRef.current) 
-        clearInterval(notificationPollingRef.current); 
+    return () => {
+      if (notificationPollingRef.current)
+        clearInterval(notificationPollingRef.current);
     };
   }, [dispatch]);
 
@@ -207,31 +207,31 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     return () => clearInterval(resetInterval);
   }, []);
 
-  const handleNotificationClick = (e) => { 
-    e.stopPropagation(); 
-    setNotificationsDropDown((prev) => !prev); 
+  const handleNotificationClick = (e) => {
+    e.stopPropagation();
+    setNotificationsDropDown((prev) => !prev);
   };
 
   const handleCloseNotifications = async (e) => {
     e.stopPropagation();
-    
+
     try {
       const allNotificationIds = notificationsArray.map(n => n.URID || n.id || n.NotificationId);
       setSeenNotifications(new Set([...seenNotifications, ...allNotificationIds]));
       const URID = getUserId();
       await dispatch(updateNotificationsCount({ URID })).unwrap();
-      
+
       if (URID) {
         await dispatch(Getusernotification({ URID })).unwrap();
-       
+
       } else {
         console.warn("⚠️ URID not found, skipping Getusernotification");
       }
-      
+
     } catch (error) {
       console.error("Error updating notification:", error);
     }
-    
+
     setNotificationsDropDown(false);
   };
 
@@ -257,7 +257,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [notificationsDropDown, seenNotifications, notificationsArray]);
 
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showUserMenu && userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -298,6 +298,33 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
     }
   };
 
+  // const shareOn = (platform) => {
+  //   const refLink = referralLink || `https://roventar.com/user/register?ref=${userID || "XO5599007"}`;
+  //   // Remove Position parameter from the link if present
+  //   const cleanLink = refLink.split('&Position=')[0];
+  //   const text = `Join me on Roventar - earn up to 5% commission! My ID: ${userID}`;
+
+  //   let url = "";
+  //   switch (platform) {
+  //     case "WhatsApp":
+  //       url = `https://wa.me/?text=${encodeURIComponent(text + " " + cleanLink)}`;
+  //       break;
+  //     case "Facebook":
+  //       url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(cleanLink)}`;
+  //       break;
+  //     case "Instagram":
+  //       window.open(
+  //         "https://www.instagram.com/xoxofx_official/",
+  //         "_blank"
+  //       );
+  //       return;
+
+  //     case "Telegram":
+  //       url = `https://t.me/share/url?url=${encodeURIComponent(cleanLink)}&text=${encodeURIComponent(text)}`;
+  //       break;
+  //   }
+  //   if (url) window.open(url, "_blank");
+  // };
   const shareOn = (platform) => {
     const refLink = referralLink || `https://roventar.com/user/register?ref=${userID || "XO5599007"}`;
     // Remove Position parameter from the link if present
@@ -309,23 +336,33 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
       case "WhatsApp":
         url = `https://wa.me/?text=${encodeURIComponent(text + " " + cleanLink)}`;
         break;
+
       case "Facebook":
         url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(cleanLink)}`;
         break;
+
       case "Instagram":
-        window.open(
-          "https://www.instagram.com/xoxofx_official/",
-          "_blank"
-        );
+        window.open("https://www.instagram.com/roventarfxx/", "_blank");
         return;
 
       case "Telegram":
         url = `https://t.me/share/url?url=${encodeURIComponent(cleanLink)}&text=${encodeURIComponent(text)}`;
         break;
+
+      case "Bluesky":
+        window.open("https://bsky.app/profile/roventar.bsky.social", "_blank");
+        return;
+
+      case "Pinterest":
+        window.open("https://in.pinterest.com/roventar/_profile", "_blank");
+        return;
+
+      case "YouTube":
+        window.open("https://www.youtube.com/@Roventarfx", "_blank");
+        return;
     }
     if (url) window.open(url, "_blank");
   };
-
   return (
     <>
       <header className="topbar">
@@ -360,7 +397,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
             <span>{isDark ? 'Dark mode' : 'Light mode'}</span>
           </button>
 
-        
+
           <div style={{ position: "relative" }} ref={notifyRef}>
             <div
               className="schip d-flex align-items-center gap-2"
@@ -619,14 +656,14 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   Your trading bot is currently <strong style={{ color: "#34d399" }}>ACTIVE</strong>
                 </div>
               </div>
-              <div style={{ 
-                display: "flex", 
-                justifyContent: "center", 
+              <div style={{
+                display: "flex",
+                justifyContent: "center",
                 gap: "10px",
                 marginTop: "10px"
               }}>
-                <button 
-                  className="copy-btn" 
+                <button
+                  className="copy-btn"
                   onClick={activateBot}
                   style={{ background: "#34d399", color: "#000" }}
                 >
@@ -706,7 +743,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
               <button className="copy-btn" onClick={copyRef} disabled={refrelLoading}>
                 {copySuccess ? "✓ Copied!" : "Copy Referral Link"}
               </button>
-              <div style={{ fontSize: "10px", color: "var(--t2)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px", marginBottom: "8px", marginTop: "15px" }}>
+              {/* <div style={{ fontSize: "10px", color: "var(--t2)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px", marginBottom: "8px", marginTop: "15px" }}>
                 Share on Social Media
               </div>
               <div className="soc-grid">
@@ -725,6 +762,39 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                 <button className="soc-btn soc-tg" onClick={() => shareOn("Telegram")}>
                   <FaTelegramPlane style={{ marginRight: "8px" }} />
                   Telegram
+                </button>
+              </div> */}
+              <div style={{ fontSize: "10px", color: "var(--t2)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px", marginBottom: "8px", marginTop: "15px" }}>
+                Share on Social Media
+              </div>
+              <div className="soc-grid">
+                {/* <button className="soc-btn soc-wa" onClick={() => shareOn("WhatsApp")}>
+                  <FaWhatsapp style={{ marginRight: "8px" }} />
+                  WhatsApp
+                </button> */}
+                <a className="soc-btn soc-pdf" href="https://apis.roventar.com/RoventarV1.pdf" target="_blank">
+                  <FaFilePdf />
+                  PDF
+                </a>
+                <button className="soc-btn soc-ig" onClick={() => shareOn("Instagram")}>
+                  <FaInstagram style={{ marginRight: "8px" }} />
+                  Instagram
+                </button>
+                {/* <button className="soc-btn soc-tg" onClick={() => shareOn("Telegram")}>
+                  <FaTelegramPlane style={{ marginRight: "8px" }} />
+                  Telegram
+                </button> */}
+                <button className="soc-btn soc-bs" onClick={() => shareOn("Bluesky")}>
+                  <FaCloud style={{ marginRight: "8px" }} /> {/* Replace with appropriate icon */}
+                  Bluesky
+                </button>
+                <button className="soc-btn soc-pi" onClick={() => shareOn("Pinterest")}>
+                  <FaPinterest style={{ marginRight: "8px" }} />
+                  Pinterest
+                </button>
+                <button className="soc-btn soc-yt" onClick={() => shareOn("YouTube")}>
+                  <FaYoutube style={{ marginRight: "8px" }} />
+                  YouTube
                 </button>
               </div>
             </div>
