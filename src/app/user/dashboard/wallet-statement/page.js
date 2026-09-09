@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import "./WalletStatement.css";  
+import "./WalletStatement.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllWalletTransType,
@@ -27,9 +27,9 @@ const WalletStatement = () => {
 
   const itemsPerPage = 5;
 
- 
+
   useEffect(() => {
-      dispatch(getAllWalletTransType());
+    dispatch(getAllWalletTransType());
   }, [dispatch]);
 
   // Reset type & fetch report when tab changes
@@ -142,7 +142,7 @@ const WalletStatement = () => {
 
   // Calculate colSpan based on active tab
   const getColSpan = () => {
-    return activeTab === "Withdrawal" ? 8 : 7;
+    return activeTab === "Withdrawal" ? 7 : 7;
   };
 
   return (
@@ -161,14 +161,14 @@ const WalletStatement = () => {
           ))}
         </div>
 
-         
+
         <div className="wallet-actions">
           <select
             className="range-select"
             value={selectedTransType}
             onChange={handleTransTypeChange}
           >
-           
+
             {activeTab === "Withdrawal"
               ? transTypeOptions.map((item, idx) => (
                 <option key={idx} value={item.value}>
@@ -197,89 +197,111 @@ const WalletStatement = () => {
               value={searchTerm}
               className="search-input"
               onChange={(e) => setSearchTerm(e.target.value)}
-            /> 
+            />
           </div>
         </div>
 
-    <div className="table-card">
-        <div className="table-responsive">
-          <table className="income-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Request</th>
-                <th>Charges</th>
-                <th>Release</th>
-                {activeTab === "Withdrawal" && <th>TransHash</th>}  
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
+        <div className="table-card">
+          <div className="table-responsive">
+            <table className="income-table">
+              <thead>
                 <tr>
-                  <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
-                    Loading...
-                  </td>
+                  {activeTab === "Withdrawal" ? (
+                    <>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Request</th>
+                      <th>Charges</th>
+                      <th>Release</th>
+                      <th>TransactionHash</th>
+                      <th>Status</th>
+                    </>
+                  ) : (
+                    <>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Credit</th>
+                      <th>Debit</th>
+                      <th>Type</th>
+                      <th>Remark</th>
+                      <th>Status</th>
+                    </>
+                  )}
                 </tr>
-              ) : paginatedData.length > 0 ? (
-                paginatedData.map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
-<td className="credit-positive">
-  {item.CreatedDate || item.createdDate 
-    ? (item.CreatedDate || item.createdDate).split('T')[0] 
-    : "-"}
-</td>
-                    <td className="debit-negative">{item.TotWithdl ?? 0}</td>
-                    <td className="remark-text">{item.AdminCharges ?? 0}</td>
-                    <td>{item.debit || "-"}</td>
-                    
-                    {activeTab === "Withdrawal" && (
-                      <td>
-                        <div className="d-flex align-items-center gap-2">
-                          <span
-                            title={item.transHash || "-"}
-                            style={{
-                              maxWidth: "180px",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              display: "inline-block"
-                            }}
-                          >
-                            {item.transHash || "-"}
-                          </span>
-                          {item.transHash && (
-                            <button
-                              type="button"
-                              className="btn btn-sm p-0"
-                              title="Copy Transaction Hash"
-                              onClick={() => navigator.clipboard.writeText(item.transHash)}
-                            >
-                              <i className="fa fa-copy"></i>
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    )}
-                    
-                    
-                    
-                    <td className="status-badge pending-bg status-1">{item.status || "-"}</td>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
+                      Loading...
+                    </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
-                    No records found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                ) : paginatedData.length > 0 ? (
+                  paginatedData.map((item, idx) => (
+                    <tr key={idx}>
+                      {activeTab === "Withdrawal" ? (
+                        <>
+                          <td>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
+                          <td className="credit-positive">
+                            {item.CreatedDate || item.createdDate
+                              ? (item.CreatedDate || item.createdDate).split('T')[0]
+                              : "-"}
+                          </td>
+                          <td>{item.TotWithdl || "-"}</td>
+                          <td>{item.AdminCharges || "-"}</td>
+                          <td>{item.debit || "-"}</td>
+                          <td>
+                            <div className="d-flex align-items-center gap-2">
+                              <span
+                                title={item.Transhash || "-"}
+                                style={{
+                                  maxWidth: "180px",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  display: "inline-block"
+                                }}
+                              >
+                                {item.Transhash || "-"}
+                              </span>
+                              {item.Transhash && (
+                                <button
+                                  type="button"
+                                  className="btn btn-sm p-0"
+                                  title="Copy Transaction Hash"
+                                  onClick={() => navigator.clipboard.writeText(item.Transhash)}
+                                >
+                                  <i className="fa fa-copy"></i>
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                          <td className="status-badge pending-bg status-1">{item.status || "-"}</td>
+                        </>
+                      ) : (
+                        <>
+                          <td>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
+                          <td className="credit-positive">{item.CreatedDate || item.createdDate || "-"}</td>
+                          <td className="debit-negative">{item.credit ?? 0}</td>
+                          <td className="remark-text">{item.debit ?? 0}</td>
+                          <td className="status-badge status-1">{item.transType || "-"}</td>
+                          <td>{item.remark || "-"}</td>
+                          <td className="status-badge pending-bg status-1">{item.status || "-"}</td>
+                        </>
+                      )}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={getColSpan()} className="no-data">  {/* 👈 Dynamic colSpan */}
+                      No records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-</div>
         {/* Pagination */}
         {!loading && filteredData.length > 0 && (
           <div className="pagination">
