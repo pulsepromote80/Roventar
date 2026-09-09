@@ -181,7 +181,7 @@ const botConfig = {
     subtitle: "Scalping Strategy",
     icon: "🤖",
     iconBg: "sb-icon-blue",
-    symbols: ["EUR/USD", "GBP/USD"],
+    symbols: ["EUR/USD"],
     chartColor: "#2563eb",
     rsi: "62.4",
     macd: "Bullish",
@@ -197,7 +197,7 @@ const botConfig = {
     subtitle: "Trend Following Strategy",
     icon: "🧠",
     iconBg: "sb-icon-purple",
-    symbols: ["EUR/USD", "USD/JPY"],
+    symbols: ["USD/JPY"],
     chartColor: "#9333ea",
     rsi: "58.7",
     macd: "Bullish",
@@ -213,7 +213,7 @@ const botConfig = {
     subtitle: "Grid Trading Strategy",
     icon: "🥷",
     iconBg: "sb-icon-orange",
-    symbols: ["EUR/USD", "GBP/USD"],
+    symbols: ["GBP/USD"],
     chartColor: "#f97316",
     rsi: "45.3",
     macd: "Bearish",
@@ -229,7 +229,7 @@ const botConfig = {
     subtitle: "Breakout Strategy",
     icon: "🎯",
     iconBg: "sb-icon-green",
-    symbols: ["GBP/USD", "EUR/USD"],
+    symbols: ["EUR/USD"],
     chartColor: "#22c55e",
     rsi: "65.1",
     macd: "Bullish",
@@ -259,7 +259,7 @@ const botConfig = {
     myfxbookLink: "https://www.myfxbook.com/members/FXEAMASTER/gold-rush/9875023",
   },
 
-  
+
 };
 
 // Default config for unknown products
@@ -328,7 +328,7 @@ const mapApiDataToBots = (activeProducts) => {
   if (!activeProducts || !Array.isArray(activeProducts)) return [];
 
 
-  return activeProducts.map((product) => {
+  const mappedBots = activeProducts.map((product) => {
     const config = getBotConfig(product.productName);
 
     return {
@@ -347,7 +347,7 @@ const mapApiDataToBots = (activeProducts) => {
       confidence: config.confidence,
       timeframe: config.timeframe,
       market: config.market,
-      myfxbookLink: config.myfxbookLink,  
+      myfxbookLink: config.myfxbookLink,
       risk: config.risk || "Medium",
       apr: `${product.roi}%`,
       winRate: `${product.winrate}%`,
@@ -358,6 +358,13 @@ const mapApiDataToBots = (activeProducts) => {
       categoryName: product.categoryName,
       description: product.tittle,
     };
+  });
+
+  // Sort bots: Commodities (Gold) first, then Forex
+  return mappedBots.sort((a, b) => {
+    if (a.market === "Commodities" && b.market !== "Commodities") return -1;
+    if (a.market !== "Commodities" && b.market === "Commodities") return 1;
+    return 0;
   });
 };
 

@@ -10,7 +10,7 @@ import { usernameLoginId, clearUsernameData } from '@/app/redux/slices/adminMast
 
 const LeaseAgentPage = () => {
   const dispatch = useDispatch();
-  const { error: usernameError, rechargeTransactionData, usernameData } = useSelector((state) => state.adminMaster ?? {});
+  const { error: usernameError, rechargeTransactionData, usernameData: usernameData } = useSelector((state) => state.adminMaster ?? {});
 
   const { getKit } = useSelector((state) => state.event);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,8 +33,8 @@ const LeaseAgentPage = () => {
   // Fetch kit data when usernameData changes
   useEffect(() => {
     const fetchKitData = async () => {
-      if (usernameData && usernameData.urid) {
-        await dispatch(getBindAdminKit(usernameData.urid));
+     {
+        await dispatch(getBindAdminKit());
       }
     };
 
@@ -62,7 +62,7 @@ const LeaseAgentPage = () => {
     if (roiAmount && roiAmount.trim()) {
       const amount = parseFloat(roiAmount);
       if (isNaN(amount) || amount <= 0) {
-        setRoiAmountError('Please enter a valid ROI amount');
+        setRoiAmountError('Please enter a valid amount');
       } else {
         setRoiAmountError('');
       }
@@ -144,25 +144,20 @@ const LeaseAgentPage = () => {
       return;
     }
     if (!roiAmount.trim()) {
-      toast.error('Please enter ROI amount');
+      toast.error('Please enter amount');
       return;
     }
     if (roiAmountError) {
-      toast.error('Please enter a valid ROI amount');
+      toast.error('Please enter a valid amount');
       return;
     }
 
-    // Check if usernameData exists and has urid
-    if (!usernameData || !usernameData.urid) {
-      toast.error('Please verify the User ID first');
-      return;
-    }
-
+   
     setLoading(true);
 
-    // Call getRechargeTransactionAdmin API
+    // Call addRechargeTransactionAdmin API
     const rechargePayload = {
-      urid: usernameData.urid,
+      authlogin: userid,
       packageType: packageType.value,
       usdtValue: parseFloat(roiAmount),
     };
@@ -233,7 +228,7 @@ const LeaseAgentPage = () => {
 
           {/* Enter ROI Amount */}
           <div>
-            <label className="block mb-1 text-sm font-medium text-gray-600">Enter ROI Amount</label>
+            <label className="block mb-1 text-sm font-medium text-gray-600">Enter Amount</label>
             <input
               type="number"
               className={`w-full px-4 py-3 text-sm border rounded-xl bg-gray-50 focus:outline-none focus:ring-2 ${roiAmountError
@@ -242,7 +237,7 @@ const LeaseAgentPage = () => {
                 }`}
               value={roiAmount}
               onChange={handleRoiAmountChange}
-              placeholder="Enter ROI Amount"
+              placeholder="Enter Amount"
               min="0"
               step="0.01"
             />
@@ -323,14 +318,14 @@ const LeaseAgentPage = () => {
                 }),
               }}
               isSearchable
-              isDisabled={!usernameData?.urid || packageOptions.length === 0}
+              isDisabled={!usernameData?.email || packageOptions.length === 0}
             />
-            {!usernameData?.urid && (
+            {!usernameData?.email && (
               <div className="mt-2 text-xs text-blue-500">
                 Please verify User ID first to Package Availabe
               </div>
             )}
-            {usernameData?.urid && packageOptions.length === 0 && (
+            {usernameData?.email && packageOptions.length === 0 && (
               <div className="mt-2 text-xs text-yellow-500">
                 No packages available for this user
               </div>
@@ -341,7 +336,7 @@ const LeaseAgentPage = () => {
           <div className="flex justify-end md:col-span-2 lg:col-span-4">
             <button
               type="submit"
-              disabled={loading || !usernameData?.urid || !packageType}
+              disabled={loading || !usernameData?.email || !packageType}
               className="px-6 py-3 text-sm font-semibold text-white transition-all rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? <div className="flex items-center justify-center gap-2">

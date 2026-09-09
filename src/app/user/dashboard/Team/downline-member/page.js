@@ -170,15 +170,17 @@ const DownlineMember = ({ isDownline = false }) => {
                                         <thead className="downline-member-thead">
                                             <tr>
                                                 <th className="downline-member-th">Sr No</th>
-
-                                                <th className="downline-member-th">Name</th>
-                                                <th className="downline-member-th">Country Flag</th>
                                                 <th className="downline-member-th">Login ID</th>
-                                                <th className="downline-member-th">Reg. Date</th>
+                                                <th className="downline-member-th">Country Flag</th>
+                                                <th className="downline-member-th">Name</th>
 
+
+                                                <th className="downline-member-th">Reg. Date</th>
+                                                <th className="downline-member-th downline-member-hide-lg">Topup Date</th>
                                                 <th className="downline-member-th downline-member-hide-xl">Package</th>
                                                 <th className="downline-member-th">Team Business</th>
-                                                <th className="downline-member-th downline-member-hide-lg">Topup Date</th>
+                                                <th className="downline-member-th">Leadership Business</th>
+
                                                 <th className="downline-member-th">Status</th>
                                             </tr>
                                         </thead>
@@ -189,11 +191,9 @@ const DownlineMember = ({ isDownline = false }) => {
                                                         <td className="downline-member-td">
                                                             {startIndex + index + 1}
                                                         </td>
-                                                        <td className="downline-member-td downline-member-name">
-                                                            {member.name || "-"}
+                                                        <td className="downline-member-td">
+                                                            {member.loginid || "-"}
                                                         </td>
-
-
                                                         <td className="downline-member-td">
                                                             <img
                                                                 src={member.countryFlag || "/default-avatar.png"}
@@ -208,12 +208,19 @@ const DownlineMember = ({ isDownline = false }) => {
                                                                 }}
                                                             />
                                                         </td>
+                                                        <td className="downline-member-td downline-member-name">
+                                                            {member.name || "-"}
+                                                        </td>
+
+
+
+
 
                                                         <td className="downline-member-td">
-                                                            {member.loginid || "-"}
-                                                        </td>
-                                                        <td className="downline-member-td">
                                                             {member.regDate || "-"}
+                                                        </td>
+                                                        <td className="downline-member-td downline-member-hide-lg">
+                                                            {member.topupDate || "-"}
                                                         </td>
 
                                                         <td className="downline-member-td downline-member-hide-xl">
@@ -222,9 +229,10 @@ const DownlineMember = ({ isDownline = false }) => {
                                                         <td className="downline-member-td">
                                                             ${Number(member.teambusiness || 0).toFixed(2)}
                                                         </td>
-                                                        <td className="downline-member-td downline-member-hide-lg">
-                                                            {member.topupDate || "-"}
+                                                        <td className="downline-member-td">
+                                                            ${Number(member.leaseAmount || 0).toFixed(2)}
                                                         </td>
+
                                                         <td className="downline-member-td">
                                                             <span className={`downline-member-status-badge ${member.Status === "Active" ? "status-active" : "status-inactive"
                                                                 }`}>

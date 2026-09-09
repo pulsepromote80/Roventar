@@ -264,7 +264,7 @@ export const addRechargeTransactionAdmin = createAsyncThunk(
   "adminMaster/addRechargeTransactionAdmin",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await postRequestWithData(
+      const response = await postRequestWithToken(
         API_ENDPOINTS.ADD_RECHARGE_TRANSACTION_ADMIN,
         data,
       );

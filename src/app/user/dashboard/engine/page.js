@@ -370,23 +370,7 @@ export default function ArbionEngine() {
     }
   }, []);
 
-  const updateStatsRandomly = useCallback(() => {
-    if (!isMounted.current) return;
 
-    setTotalProfit((prev) => +(prev + (Math.random() * 500 + 50)).toFixed(2));
-    setTotalTransactions((prev) => prev + Math.floor(Math.random() * 20) + 5);
-    setSuccessRate((prev) => {
-      let value = prev + (Math.random() * 0.02 - 0.01);
-      if (value > 99.99) value = 99.99;
-      if (value < 99.9) value = 99.9;
-      return +value.toFixed(2);
-    });
-
-    setFlashEffect({ profit: true, tx: true, success: true });
-    setTimeout(() => {
-      if (isMounted.current) setFlashEffect({ profit: false, tx: false, success: false });
-    }, 500);
-  }, []);
 
   useEffect(() => {
     countdownIntervalRef.current = setInterval(() => {
@@ -397,11 +381,7 @@ export default function ArbionEngine() {
     return () => clearInterval(countdownIntervalRef.current);
   }, []);
 
-  useEffect(() => {
-    updateStatsRandomly();
-    statsIntervalRef.current = setInterval(updateStatsRandomly, 120000);
-    return () => clearInterval(statsIntervalRef.current);
-  }, [updateStatsRandomly]);
+
 
   const fetchTransactionLog = useCallback(async () => {
     try {
@@ -451,16 +431,11 @@ export default function ArbionEngine() {
         };
 
         const shuffledTransactions = shuffleArray(formattedTx);
-        setTransactions(shuffledTransactions.slice(0, 50));
+        setTransactions(shuffledTransactions);
         setScanData((prev) => [
           ...prev.slice(-29),
           { value: Math.random() * 100 + 20, timestamp: Date.now() },
         ]);
-
-        setFlashEffect((prev) => ({ ...prev, execs: true }));
-        setTimeout(() => {
-          if (isMounted.current) setFlashEffect((prev) => ({ ...prev, execs: false }));
-        }, 300);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -472,6 +447,28 @@ export default function ArbionEngine() {
     intervalRef.current = setInterval(() => fetchTransactionLog(), 5000);
     return () => clearInterval(intervalRef.current);
   }, [fetchTransactionLog]);
+
+  // Update stats when transactions change
+  useEffect(() => {
+    if (transactions.length > 0) {
+      const totalProfitValue = transactions.reduce((sum, tx) => {
+        const profitValue = parseFloat(tx.profit?.replace(/[^0-9.-]/g, '')) || 0;
+        return sum + profitValue;
+      }, 0);
+
+      const totalTxCount = transactions.length;
+      const successRateValue = 99.5 + (Math.random() * 0.49);
+
+      setTotalProfit(totalProfitValue);
+      setTotalTransactions(totalTxCount);
+      setSuccessRate(+successRateValue.toFixed(2));
+
+      setFlashEffect({ profit: true, tx: true, success: true });
+      setTimeout(() => {
+        if (isMounted.current) setFlashEffect({ profit: false, tx: false, success: false });
+      }, 500);
+    }
+  }, [transactions]);
 
   useEffect(() => {
     const initialData = Array.from({ length: 30 }, (_, i) => ({
@@ -591,14 +588,10 @@ export default function ArbionEngine() {
                 <div className="card-title-section">
                   <div className="card-title">Roventar Engine</div>
                   <div className="card-subtitle">
-                    AI MEV + cross-chain arb · 24/7 autonomous — Auto-updates
+                    AI MEV + cross-chain arb · 24 autonomous — Auto-updates
                   </div>
                 </div>
-                <label className="toggle">
-                  <input type="checkbox" checked={botChecked} onChange={toggleBot} />
-                  <div className="toggle-track"></div>
-                  <div className="toggle-thumb"></div>
-                </label>
+             
               </div>
 
               {/* Stats - No Price Section Here */}
