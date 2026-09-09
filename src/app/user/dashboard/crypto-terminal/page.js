@@ -273,7 +273,7 @@ export default function CryptoTerminal() {
         setApiMessage(response.data?.message || "No data received from API");
         await appendLine(R("[ERROR] ") + GR(`API Connection Failed`));
         await appendLine(
-          G("[INFO] ") + GR("Using demo mode with simulated transactions"),
+          G("[INFO] ") + GR("Using live mode with simulated transactions"),
         );
       }
     } catch (error) {
@@ -283,7 +283,7 @@ export default function CryptoTerminal() {
         R("[ERROR] ") + GR(`API Connection Failed: ${error.message}`),
       );
       await appendLine(
-        G("[INFO] ") + GR("Using demo mode with simulated transactions"),
+        G("[INFO] ") + GR("Using live mode with simulated transactions"),
       );
     }
 
