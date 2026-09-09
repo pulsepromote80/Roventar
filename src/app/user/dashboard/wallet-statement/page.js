@@ -208,11 +208,10 @@ const WalletStatement = () => {
               <tr>
                 <th>#</th>
                 <th>Date</th>
-                <th>Credit</th>
-                <th>Debit</th>
-                <th>Type</th>
-                <th>Remark</th>
-                {activeTab === "Withdrawal" && <th>TransHash</th>}  {/* 👈 Sirf Withdrawal mein */}
+                <th>Request</th>
+                <th>Charges</th>
+                <th>Release</th>
+                {activeTab === "Withdrawal" && <th>TransHash</th>}  
                 <th>Status</th>
               </tr>
             </thead>
@@ -227,13 +226,15 @@ const WalletStatement = () => {
                 paginatedData.map((item, idx) => (
                   <tr key={idx}>
                     <td>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
-                    <td className="credit-positive">{item.CreatedDate || item.createdDate || "-"}</td>
-                    <td className="debit-negative">{item.credit ?? 0}</td>
-                    <td className="remark-text">{item.debit ?? 0}</td>
-                    <td className="status-badge status-1">{item.transType || "-"}</td>
-                    <td>{item.remark || "-"}</td>
+<td className="credit-positive">
+  {item.CreatedDate || item.createdDate 
+    ? (item.CreatedDate || item.createdDate).split('T')[0] 
+    : "-"}
+</td>
+                    <td className="debit-negative">{item.TotWithdl ?? 0}</td>
+                    <td className="remark-text">{item.AdminCharges ?? 0}</td>
+                    <td>{item.debit || "-"}</td>
                     
-                    {/* 👇 Sirf Withdrawal tab mein TransHash column */}
                     {activeTab === "Withdrawal" && (
                       <td>
                         <div className="d-flex align-items-center gap-2">
@@ -262,6 +263,8 @@ const WalletStatement = () => {
                         </div>
                       </td>
                     )}
+                    
+                    
                     
                     <td className="status-badge pending-bg status-1">{item.status || "-"}</td>
                   </tr>

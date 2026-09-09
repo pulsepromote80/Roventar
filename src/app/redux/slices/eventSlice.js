@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { postformRequest, getRequest, postRequest } from '@/app/api/auth';
+import { postformRequest, getRequest, postRequest, postRequestWithToken } from '@/app/api/auth';
 import { API_ENDPOINTS } from '@/app/constants/menu-constant';
 
 
@@ -24,13 +24,9 @@ export const getevent = createAsyncThunk(
 
 export const getBindAdminKit = createAsyncThunk(
   "event/getBindAdminKit",
-  async (urid, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const endpoint = urid
-        ? `${API_ENDPOINTS.BIND_ADMIN_KIT}?urid=${urid}`
-        : API_ENDPOINTS.BIND_ADMIN_KIT;
-
-      const response = await postRequest(endpoint);
+      const response = await postRequestWithToken(API_ENDPOINTS.BIND_ADMIN_KIT);
       return response.data;
     } catch (error) {
       return rejectWithValue(

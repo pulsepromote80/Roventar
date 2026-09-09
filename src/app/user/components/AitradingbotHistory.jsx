@@ -25,8 +25,9 @@ import {
   Moon,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getRechargetransactionHIstory } from "@/app/redux/slices/fundManagerSlice";
+import { getRechargetransactionHIstory,addWithdrawalPrinciple } from "@/app/redux/slices/fundManagerSlice";
 import { getUserId } from "@/app/api/auth";
+import toast from "react-hot-toast";
 
 /* =========================
    STYLES WITH LIGHT & DARK MODE
@@ -179,8 +180,8 @@ const styles = `
     border-radius: var(--sb-radius);
     background: var(--sb-bg-1);
     box-shadow: var(--sb-shadow);
-    transition: all var(--sb-transition);
-    overflow: hidden;
+    transition: transform var(--sb-transition), box-shadow var(--sb-transition);
+    overflow: visible;
     display: flex;
     flex-direction: column;
   }
@@ -739,29 +740,137 @@ const styles = `
     grid-template-columns: 1fr;
     gap: 4px;
   }
-  
+
   .sb-detail-row:first-child {
     border-right: none;
     padding-right: 0;
   }
-  
+
   .sb-detail-row:last-child {
     padding-left: 0;
   }
 }
+
+/* ===== MODAL STYLES ===== */
+.sb-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--sb-bg-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.sb-modal-content {
+  background: var(--sb-bg-1);
+  border-radius: var(--sb-radius);
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--sb-shadow-modal);
+  border: 1px solid var(--sb-border);
+}
+
+.sb-modal-info-box {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--sb-bg-2);
+  border-radius: var(--sb-radius-sm);
+  border: 1px solid var(--sb-border);
+}
+
+.sb-modal-info-label {
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--sb-text-3);
+  font-weight: 500;
+}
+
+.sb-modal-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sb-text-1);
+}
+
+.sb-modal-info-value-large {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--sb-green);
+}
+
+.sb-modal-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm);
+  background: var(--sb-bg-1);
+  color: var(--sb-text-1);
+  font-size: 13px;
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color var(--sb-transition);
+}
+
+.sb-modal-textarea:focus {
+  outline: none;
+  border-color: var(--sb-blue);
+}
+
+.sb-modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.sb-modal-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-sm);
+  background: var(--sb-bg-1);
+  color: var(--sb-text-1);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--sb-transition);
+}
+
+.sb-modal-btn:hover {
+  background: var(--sb-bg-hover);
+}
+
+.sb-modal-btn-primary {
+  background: var(--sb-blue);
+  color: #fff;
+  border-color: var(--sb-blue);
+}
+
+.sb-modal-btn-primary:hover {
+  background: var(--sb-blue-dark);
+  border-color: var(--sb-blue-dark);
+}
 `;
 
-/* =========================
-   HISTORY CARD COMPONENT
-========================= */
+
 
 function HistoryCard({ transaction, index }) {
-  // Determine status - always "Active" for these transactions
+
+  const dispatch = useDispatch();
   const getStatus = () => {
     return { label: 'Active', class: 'success' };
   };
 
   const status = getStatus();
+
+  // Withdrawal modal state
+  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
+  const [remark, setRemark] = useState('');
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   // Get package color based on PackageName
   const getPackageColor = (packageName) => {
@@ -837,97 +946,238 @@ function HistoryCard({ transaction, index }) {
   };
 
   return (
-    <div className="sb-history-card">
-      {/* Card Header */}
-      <div className="sb-history-card-header">
-        <div className="sb-history-card-header-left">
-          <div className={`sb-history-card-icon ${getIconBg(transaction.CategoryName)}`}>
-            {getBotIcon(transaction.CategoryName)}
+    <>
+      <div className="sb-history-card">
+        {/* Card Header */}
+        <div className="sb-history-card-header">
+          <div className="sb-history-card-header-left">
+            <div className={`sb-history-card-icon ${getIconBg(transaction.CategoryName)}`}>
+              {getBotIcon(transaction.CategoryName)}
+            </div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <h3 className="sb-history-card-title">
+                {transaction.CategoryName || 'AI Bot'}
+              </h3>
+              <p className="sb-history-card-subtitle">
+                {transaction.productName || transaction.CategoryName || 'Bot'}
+              </p>
+            </div>
           </div>
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <h3 className="sb-history-card-title">
-              {transaction.CategoryName || 'AI Bot'}
-            </h3>
-            <p className="sb-history-card-subtitle">
-              {transaction.productName || transaction.CategoryName || 'Bot'}
-            </p>
-          </div>
-        </div>
-        <div className="sb-history-card-status">
-          <span className={`sb-status-dot sb-status-${status.class}`} />
-          <span className={`sb-status-text-${status.class}`}>
-            {status.label}
-          </span>
-        </div>
-      </div>
-
-      {/* Card Body */}
-      <div className="sb-history-card-body">
-        {/* Amount */}
-        <div className="sb-history-detail-row">
-          <span className="sb-history-detail-label">Invested Amount</span>
-          <span className="sb-history-detail-value sb-history-detail-value-green">
-            {formatAmount(transaction.Rkprice)}
-          </span>
-        </div>
-
-
-
-        <div className="sb-history-detail-row">
-          <span className="sb-history-detail-label">Package</span>
-          <span>
-            <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
-              {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+          <div className="sb-history-card-status">
+            <span className={`sb-status-dot sb-status-${status.class}`} />
+            <span className={`sb-status-text-${status.class}`}>
+              {status.label}
             </span>
-          </span>
+          </div>
         </div>
 
+        {/* Card Body */}
+        <div className="sb-history-card-body">
+          {/* Amount */}
+          <div className="sb-history-detail-row">
+            <span className="sb-history-detail-label">Invested Amount</span>
+            <span className="sb-history-detail-value sb-history-detail-value-green">
+              {formatAmount(transaction.Rkprice)}
+            </span>
+          </div>
 
 
-        {/* Details Section - Redesigned */}
-        {/* Details Section - Simple Clean */}
-        <div className="sb-details-clean">
-          
+
+          <div className="sb-history-detail-row">
+            <span className="sb-history-detail-label">Package</span>
+            <span>
+              <span className={`sb-package-badge ${getPackageColor(transaction.PackageName)}`}>
+                {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+              </span>
+            </span>
+          </div>
+
+
+
+          {/* Details Section - Redesigned */}
+          {/* Details Section - Simple Clean */}
+          <div className="sb-details-clean">
+
             <span className="sb-detail-label">Activated By</span>
             <span className="sb-detail-value">
               {transaction.AuthLogin || 'Welcome'}
             </span>
-          
+
 
             <span className="sb-detail-label">Date</span>
             <span className="sb-detail-value">
               {formatDate(transaction.OrderDate)}
             </span>
-         
-         
-        </div>
-        
 
 
-        {/* Bottom Stats */}
-        <div className="sb-history-stats-grid">
-          <div className="sb-history-stat-item">
-            <p className="sb-history-stat-label">APY</p>
-            <p className="sb-history-stat-value" style={{ color: 'var(--sb-green)' }}>
-              {/* {formatROI(transaction?.APY)} */}
-              {transaction?.APY}
-            </p>
           </div>
-          <div className="sb-history-stat-item sb-history-stat-border">
-            <p className="sb-history-stat-label">Status</p>
-            <p className="sb-history-stat-value" style={{ color: 'var(--sb-green)' }}>
-              Active
-            </p>
+
+
+
+          {/* Bottom Stats */}
+          <div className="sb-history-stats-grid">
+            <div className="sb-history-stat-item">
+              <p className="sb-history-stat-label">APY</p>
+              <p className="sb-history-stat-value" style={{ color: 'var(--sb-green)' }}>
+                {/* {formatROI(transaction?.APY)} */}
+                {transaction?.APY}
+              </p>
+            </div>
+            <div className="sb-history-stat-item sb-history-stat-border">
+              <p className="sb-history-stat-label">Status</p>
+              <p className="sb-history-stat-value" style={{ color: 'var(--sb-green)' }}>
+                Active
+              </p>
+            </div>
+            <div className="sb-history-stat-item">
+              <p className="sb-history-stat-label">Limit</p>
+              <p className="sb-history-stat-value" style={{ color: 'var(--sb-amber)' }}>
+                {transaction.PackageName ? transaction.PackageName.split(',')[1].trim() : 'Basic'}
+              </p>
+            </div>
           </div>
-          <div className="sb-history-stat-item">
-            <p className="sb-history-stat-label">Limit</p>
-            <p className="sb-history-stat-value" style={{ color: 'var(--sb-amber)' }}>
-              {transaction.PackageName ? transaction.PackageName.split(',')[1].trim() : 'Basic'}
-            </p>
-          </div>
+          {transaction.LeftDaysWithdrawal != 0 && (
+            <div className="sb-details-clean" style={{ gridTemplateColumns: '1fr', textAlign: 'center' }}>
+
+              <span className="sb-detail-label" style={{ marginBottom: '0', lineHeight: '1.2' }}>Days Until Principal Withdrawal</span>
+              <span className="sb-detail-value" style={{ marginTop: '-2px', lineHeight: '1.2' }}>
+                Available in {transaction.LeftDaysWithdrawal || '30'} days
+              </span>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' }}>
+
+                <button
+                  onClick={() => setShowWithdrawalModal(true)}
+                  style={{
+                    padding: '4px 12px',
+                    border: '1px solid var(--sb-blue)',
+                    borderRadius: '6px',
+                    background: 'var(--sb-blue)',
+                    color: '#fff',
+                    fontSize: '11px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all var(--sb-transition)'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.background = 'var(--sb-blue-dark)';
+                    e.target.style.borderColor = 'var(--sb-blue-dark)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.background = 'var(--sb-blue)';
+                    e.target.style.borderColor = 'var(--sb-blue)';
+                  }}
+                >
+                  Withdrawal
+                </button>
+              </div>
+
+            </div>
+          )}
         </div>
       </div>
-    </div>
+
+      {/* Withdrawal Modal */}
+      {showWithdrawalModal && (
+        <div
+          className="sb-modal-overlay"
+          onClick={() => setShowWithdrawalModal(false)}
+        >
+          <div
+            className="sb-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3
+              style={{
+                margin: '0 0 16px 0',
+                fontSize: '18px',
+                fontWeight: '700',
+                color: 'var(--sb-text-1)'
+              }}
+            >
+              Principal Withdrawal
+            </h3>
+
+            <div className="sb-modal-info-box">
+              <div className="sb-modal-info-label">Amount</div>
+              <div className="sb-modal-info-value sb-modal-info-value-large">
+                {formatAmount(transaction.Rkprice)}
+              </div>
+            </div>
+
+            <div className="sb-modal-info-box">
+              <div className="sb-modal-info-label">Package</div>
+              <div className="sb-modal-info-value">
+                {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label
+                style={{
+                  display: 'block',
+                  marginBottom: '6px',
+                  fontSize: '12px',
+                  color: 'var(--sb-text-3)',
+                  fontWeight: '500'
+                }}
+              >
+                Remark
+              </label>
+              <textarea
+                className="sb-modal-textarea"
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
+                placeholder="Enter your remark..."
+              />
+            </div>
+
+            <div className="sb-modal-buttons">
+              <button
+                className="sb-modal-btn"
+                onClick={() => {
+                  setShowWithdrawalModal(false);
+                  setRemark('');
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="sb-modal-btn sb-modal-btn-primary"
+                onClick={async () => {
+                  try {
+                    setIsWithdrawing(true);
+                    
+                    const withdrawalData = {
+                      remark: remark,
+                      rechargeid: transaction.RechargeId || transaction.id || transaction.rechargeid || ''
+                    };
+
+                    const result = await dispatch(addWithdrawalPrinciple(withdrawalData)).unwrap();
+
+                    if (result?.statusCode === 200 || result?.success) {
+                      toast.success(result.message);
+                      setShowWithdrawalModal(false);
+                      setRemark('');
+                    } else {
+                      toast.error(result?.message || 'Failed to submit withdrawal request');
+                    }
+                  } catch (error) {
+                    console.error('Withdrawal error:', error);
+                    toast.error(error?.message || 'An error occurred during withdrawal');
+                  } finally {
+                    setIsWithdrawing(false);
+                  }
+                }}
+                disabled={isWithdrawing}
+              >
+                {isWithdrawing ? 'Processing...' : 'Confirm Withdrawal'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

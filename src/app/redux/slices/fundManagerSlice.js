@@ -26,7 +26,8 @@ const API_ENDPOINTS = {
     ADD_RECHARGE_TRANSACTION_USER:"/FundManager/addRechargeTransactionUser",
     GET_RECHARGE_TRANSACTION_HISTORY:"/FundManager/getRechargeTransactionURID",
     GENERATE_ROI_BOTCLICK:"/FundManager/genrateROI_BOTCLICK",
-    FUND_TRANSFER_DEPOSIT_TO_DEPOSIT:"/FundManager/fundTransferDepositToDeposit"
+    FUND_TRANSFER_DEPOSIT_TO_DEPOSIT:"/FundManager/fundTransferDepositToDeposit",
+    WITHDRAWAL_PRINCIPLE:"/WalletReport/withdrawalPrinciple"
 
 };
 export const getAllFundRequestReportAdmin = createAsyncThunk(
@@ -441,6 +442,22 @@ export const botActivate = createAsyncThunk(
         }
     }
 );
+
+export const addWithdrawalPrinciple = createAsyncThunk(
+    "fundManager/addWithdrawalPrinciple",
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await postRequestWithToken(
+                API_ENDPOINTS.WITHDRAWAL_PRINCIPLE,
+                data
+            );
+            return response;
+        } catch (error) {
+            console.error("API Error:", error.response?.data || error.message);
+            return rejectWithValue(error.response?.data?.message || "Failed to fetch community data");
+        }
+    }
+);
 const fundManagerSlice = createSlice({
     name: "fundManager",
     initialState: {
@@ -470,7 +487,8 @@ const fundManagerSlice = createSlice({
         GetDirectMemberData:null,
         RechargeUserData:null,
         RechargeBotHistory:null,
-        BotData:null
+        BotData:null,
+        principleData:null
     },
     reducers: {
     },
@@ -813,6 +831,19 @@ const fundManagerSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 })
+
+                .addCase(addWithdrawalPrinciple.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(addWithdrawalPrinciple.fulfilled, (state, action) => {
+                state.loading = false;
+                state.principleData = action.payload;
+            })
+            .addCase(addWithdrawalPrinciple.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
 
     }
 });
