@@ -346,7 +346,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
         return;
 
       case "Telegram":
-        url = `https://t.me/share/url?url=${encodeURIComponent(cleanLink)}&text=${encodeURIComponent(text)}`;
+        url = `https://t.me/+fgQ-oPNcU2BmMTg1`;
         break;
 
       case "Bluesky":
@@ -743,27 +743,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
               <button className="copy-btn" onClick={copyRef} disabled={refrelLoading}>
                 {copySuccess ? "✓ Copied!" : "Copy Referral Link"}
               </button>
-              {/* <div style={{ fontSize: "10px", color: "var(--t2)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px", marginBottom: "8px", marginTop: "15px" }}>
-                Share on Social Media
-              </div>
-              <div className="soc-grid">
-                <button className="soc-btn soc-wa" onClick={() => shareOn("WhatsApp")}>
-                  <FaWhatsapp style={{ marginRight: "8px" }} />
-                  WhatsApp
-                </button>
-                <a className="soc-btn soc-pdf" href="https://apis.roventar.com/RoventarV1.pdf" target="_blank">
-                  <FaFilePdf />
-                  PDF
-                </a>
-                <button className="soc-btn soc-ig" onClick={() => shareOn("Instagram")}>
-                  <FaInstagram style={{ marginRight: "8px" }} />
-                  Instagram
-                </button>
-                <button className="soc-btn soc-tg" onClick={() => shareOn("Telegram")}>
-                  <FaTelegramPlane style={{ marginRight: "8px" }} />
-                  Telegram
-                </button>
-              </div> */}
+              
               <div style={{ fontSize: "10px", color: "var(--t2)", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".6px", marginBottom: "8px", marginTop: "15px" }}>
                 Share on Social Media
               </div>
@@ -780,10 +760,10 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   <FaInstagram style={{ marginRight: "8px" }} />
                   Instagram
                 </button>
-                {/* <button className="soc-btn soc-tg" onClick={() => shareOn("Telegram")}>
+                <button className="soc-btn soc-tg" onClick={() => shareOn("Telegram")}>
                   <FaTelegramPlane style={{ marginRight: "8px" }} />
                   Telegram
-                </button> */}
+                </button>
                 <button className="soc-btn soc-bs" onClick={() => shareOn("Bluesky")}>
                   <FaCloud style={{ marginRight: "8px" }} /> {/* Replace with appropriate icon */}
                   Bluesky
