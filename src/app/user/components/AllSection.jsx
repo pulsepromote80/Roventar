@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useState } from "react";
 import { useEffect } from "react";
 import TradingViewWidget from "./Tradeview";
+import TradingViewTicker from "./TradingViewTicker";
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -317,12 +318,13 @@ export default function HomePage() {
         </section>
 
         {/* ---------------- TICKER ---------------- */}
-        <div className="border-t border-b border-[rgba(140,180,200,0.14)] [background:linear-gradient(90deg,rgba(34,232,212,0.04),rgba(203,164,99,0.03))] py-4 overflow-hidden whitespace-nowrap">
-          <div
+        {/* <div className="border-t border-b border-[rgba(140,180,200,0.14)] [background:linear-gradient(90deg,rgba(34,232,212,0.04),rgba(203,164,99,0.03))] py-4 overflow-hidden whitespace-nowrap"> */}
+          {/* <div
             id="tickerTrack"
             className="inline-flex gap-[52px] animate-ticker"
-          />
-        </div>
+          /> */}
+          <TradingViewTicker/>
+        {/* </div> */}
 
         {/* ---------------- ABOUT ---------------- */}
         <section
@@ -1165,7 +1167,7 @@ export default function HomePage() {
                 An AI-powered trading technology ecosystem for global forex and
                 digital asset markets.
               </p>
-             
+
               <div className="flex gap-3 mt-[22px] flex-wrap">
                 {/* Instagram */}
                 <a
@@ -1185,7 +1187,22 @@ export default function HomePage() {
                     <circle cx="18.41" cy="5.59" r="1.44" />
                   </svg>
                 </a>
-
+                {/* Telegram */}
+                <a
+                  href="https://t.me/+fgQ-oPNcU2BmMTg1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Telegram"
+                  className="w-9 h-9 rounded-full border border-[rgba(140,180,200,0.14)] flex items-center justify-center transition-[border-color,background] duration-300 hover:border-[#22e8d4] hover:bg-[#22e8d4]/[0.14]"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-[15px] h-[15px] text-[#8ea0b5]"
+                  >
+                    <path d="M21.9 2.6 2.8 9.9c-1.3.5-1.3 1.2-.2 1.5l4.9 1.5 1.9 5.9c.2.5.1.7.6.7.4 0 .6-.2.8-.4l2.4-2.3 5 3.7c.9.5 1.6.3 1.8-.8l3.2-15.1c.3-1.3-.5-1.9-1.3-1.5zM8.3 12.5l10.8-6.8c.5-.3 1-.1.6.2l-8.8 8-.3 3.1-1.2-4.5-1.1-.3z" />
+                  </svg>
+                </a>
                 {/* Bluesky */}
                 <a
                   href="https://bsky.app/profile/roventar.bsky.social"
