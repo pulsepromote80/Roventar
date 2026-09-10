@@ -30,9 +30,9 @@ import { activeProducts, productLoading } from "@/app/(main)/admin/product/produ
 import html2pdf from 'html2pdf.js';
 import InvestmentHistory from "../../components/AitradingbotHistory";
 
-/* =========================
-   LIVE DATA HOOK - Binance WebSocket
-========================= */
+
+
+const TWELVEDATA_API_KEY = "7b23d1d237c14b5297a2d5df7a0e23e7"; 
 
 function useLiveMarket() {
   const [livePrice, setLivePrice] = useState(null);
@@ -42,14 +42,43 @@ function useLiveMarket() {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [marketPrices, setMarketPrices] = useState({});
   const previousPriceRef = useRef(null);
-  const priceHistoryRef = useRef([]);
 
-  const generateLivePrice = (basePrice, symbol) => {
-    const volatility = symbol === "XAU/USD" ? 0.002 : 0.001;
-    const change = (Math.random() - 0.5) * volatility * basePrice;
-    return basePrice + change;
+
+  const realPricesRef = useRef({});
+
+  const buildMarketPrices = () => {
+    const bases = {
+      "EUR/USD": realPricesRef.current["EUR/USD"] ?? 1.16642,
+      "GBP/USD": realPricesRef.current["GBP/USD"] ?? 1.31867,
+      "XAU/USD": realPricesRef.current["XAU/USD"] ?? 3523.41,
+      "USD/JPY": realPricesRef.current["USD/JPY"] ?? 146.217,
+    };
+
+    return {
+      "EUR/USD": {
+        price: bases["EUR/USD"],
+        change: ((Math.random() - 0.5) * 0.2).toFixed(2),
+        positive: Math.random() > 0.5,
+      },
+      "GBP/USD": {
+        price: bases["GBP/USD"],
+        change: ((Math.random() - 0.5) * 0.25).toFixed(2),
+        positive: Math.random() > 0.5,
+      },
+      "XAU/USD": {
+        price: bases["XAU/USD"],
+        change: ((Math.random() - 0.5) * 0.3).toFixed(2),
+        positive: Math.random() > 0.5,
+      },
+      "USD/JPY": {
+        price: bases["USD/JPY"],
+        change: ((Math.random() - 0.5) * 0.15).toFixed(2),
+        positive: Math.random() > 0.5,
+      },
+    };
   };
 
+  // ===== CHART ENGINE (waisa hi hardcoded/simulated jaisa pehle tha - chart move karta rahega) =====
   useEffect(() => {
     const stream = "btcusdt@trade";
     const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${stream}`);
@@ -74,34 +103,11 @@ function useLiveMarket() {
 
         setChartData((prev) => {
           const newData = [...prev, price];
-          if (newData.length > 50) {
-            return newData.slice(-50);
-          }
+          if (newData.length > 50) return newData.slice(-50);
           return newData;
         });
 
-        setMarketPrices({
-          "EUR/USD": {
-            price: generateLivePrice(1.16642, "EUR/USD"),
-            change: ((Math.random() - 0.5) * 0.2).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "GBP/USD": {
-            price: generateLivePrice(1.31867, "GBP/USD"),
-            change: ((Math.random() - 0.5) * 0.25).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "XAU/USD": {
-            price: generateLivePrice(3523.41, "XAU/USD"),
-            change: ((Math.random() - 0.5) * 0.3).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "USD/JPY": {
-            price: generateLivePrice(146.217, "USD/JPY"),
-            change: ((Math.random() - 0.5) * 0.15).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-        });
+        setMarketPrices(buildMarketPrices());
       }
     };
 
@@ -125,7 +131,6 @@ function useLiveMarket() {
         const simulatedPrice = 43000 + (Math.random() - 0.5) * 200;
         setLivePrice(simulatedPrice);
         setLastUpdate(Date.now());
-
         setPriceChange((Math.random() - 0.5) * 0.5);
 
         setChartData((prev) => {
@@ -134,33 +139,63 @@ function useLiveMarket() {
           return newData;
         });
 
-        setMarketPrices({
-          "EUR/USD": {
-            price: 1.16642 + (Math.random() - 0.5) * 0.005,
-            change: ((Math.random() - 0.5) * 0.3).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "GBP/USD": {
-            price: 1.31867 + (Math.random() - 0.5) * 0.005,
-            change: ((Math.random() - 0.5) * 0.3).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "XAU/USD": {
-            price: 3523.41 + (Math.random() - 0.5) * 10,
-            change: ((Math.random() - 0.5) * 0.3).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-          "USD/JPY": {
-            price: 146.217 + (Math.random() - 0.5) * 0.5,
-            change: ((Math.random() - 0.5) * 0.3).toFixed(2),
-            positive: Math.random() > 0.5,
-          },
-        });
+        setMarketPrices(buildMarketPrices());
       }
     }, 3000);
 
     return () => clearInterval(fallbackInterval);
   }, [wsConnected]);
+
+  // ===== REAL PRICE FETCH (sirf number, har 8 min me update, beech me frozen rehta hai) =====
+  useEffect(() => {
+    let isMounted = true;
+    const isFetchingRef = { current: false };
+    const backoffUntilRef = { current: 0 };
+    const symbols = ["EUR/USD", "GBP/USD", "XAU/USD", "USD/JPY"];
+
+    const fetchRealPrices = async () => {
+      if (isFetchingRef.current) return;
+      if (Date.now() < backoffUntilRef.current) return;
+      isFetchingRef.current = true;
+
+      try {
+        const symbolParam = symbols.join(",");
+        const res = await fetch(
+          `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbolParam)}&apikey=${TWELVEDATA_API_KEY}`
+        );
+
+        if (res.status === 429) {
+          console.warn("Twelve Data: rate limit hit, backing off 5 min");
+          backoffUntilRef.current = Date.now() + 5 * 60 * 1000;
+          return;
+        }
+
+        const data = await res.json();
+        if (!isMounted) return;
+
+        symbols.forEach((symbol) => {
+          const entry = data[symbol];
+          if (entry && entry.status !== "error" && entry.close) {
+            realPricesRef.current[symbol] = parseFloat(entry.close);
+          }
+        });
+
+        setMarketPrices(buildMarketPrices());
+      } catch (err) {
+        console.error("Real price fetch failed:", err);
+      } finally {
+        isFetchingRef.current = false;
+      }
+    };
+
+    fetchRealPrices();
+    const interval = setInterval(fetchRealPrices, 480000); // 8 min - credit-safe
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   return {
     livePrice,
@@ -218,7 +253,7 @@ const botConfig = {
     rsi: "45.3",
     macd: "Bearish",
     trend: "Sideways",
-    signal: "SELL",
+    signal: "BUY",
     signalSymbol: "GBP/USD",
     confidence: "64%",
     timeframe: "1H",
@@ -251,7 +286,7 @@ const botConfig = {
     rsi: "53.6",
     macd: "Bearish",
     trend: "Sideways",
-    signal: "SELL",
+    signal: "BUY",
     signalSymbol: "XAU/USD",
     confidence: "68%",
     timeframe: "15M",
@@ -788,7 +823,7 @@ function InvestModal({ bot, onClose, onSubmit, walletBalance, isLoading }) {
           <label className="sb-modal-label">User ID *</label>
           <input
             className="sb-modal-input"
-            placeholder="Enter User ID (e.g. R123445)"
+            placeholder="Enter User ID (e.g. test@gmail.com)"
             value={uid}
             onChange={e => setUid(e.target.value)}
           />
