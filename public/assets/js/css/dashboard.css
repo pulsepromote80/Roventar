@@ -17088,6 +17088,13 @@ html .btn-g2:hover {
   letter-spacing: -.5px;
 }
 
+.dx-biz-value1 {
+  font-size: 23px;
+  font-weight: 600;
+  color: var(--dashboardroot-ink);
+  letter-spacing: -.5px;
+}
+
 .dx-biz-sub {
   font-size: 12.5px;
   font-weight: 600;
@@ -17103,6 +17110,7 @@ html .btn-g2:hover {
   margin-top: 3px;
   margin-bottom: 12px;
 }
+
 
 /* Business Overview row: 5 equal cards on desktop, wraps neatly below */
 .dx-biz-row>[class*="col-"] {

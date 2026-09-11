@@ -24,6 +24,7 @@ import {
 } from "react-icons/fi";
 import { FaBitcoin } from "react-icons/fa";
 import { doUserLogout } from "@/app/api/auth";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function DashboardHeader({
   sidebarOpen,
@@ -32,6 +33,7 @@ export default function DashboardHeader({
 
   const router = useRouter();
   const pathname = usePathname();
+  const { isDark } = useTheme();
 
   const closeSidebar = () => {
     if (window.matchMedia("(max-width: 1024px)").matches) {
@@ -52,7 +54,7 @@ export default function DashboardHeader({
     <aside className="sidebar">
       <div className="logo-area">
         <Image
-          src="/LOG02.png"
+          src={isDark ? "/logo.png" : "/LOG02.png"}
           alt="Logo"
           width={200}
           height={60}

@@ -147,12 +147,12 @@ function AIAssistant() {
 
     let entry, sl, tp1, tp2, sup, res;
     if (isGold) {
-      entry = 3365;
-      sl = 3355;
-      tp1 = 3378;
-      tp2 = 3392;
-      sup = 3358;
-      res = 3388;
+      entry = 4354;
+      sl = 4344;
+      tp1 = 4367;
+      tp2 = 4381;
+      sup = 4347;
+      res = 4377;
     } else if (isBTC) {
       entry = 67100;
       sl = 65800;
@@ -375,6 +375,29 @@ function AIAssistant() {
     };
   }
 
+  // ----- FETCH LIVE GOLD PRICE -----
+  async function fetchGoldPrice(currentTrend, currentEntry) {
+    try {
+      const response = await fetch('https://xaus.com/api/v1/spot');
+      const data = await response.json();
+      const price = data.spot_usd_oz || data.xau?.price;
+      
+      if (Number.isFinite(price)) {
+        setLivePrice(price);
+        const levels = calculateTradeLevels(price, currentTrend);
+        setTradeLevels(levels);
+      }
+    } catch (error) {
+      console.error('Error fetching gold price:', error);
+      // Fallback to entry price on error
+      if (currentEntry) {
+        setLivePrice(currentEntry);
+        const levels = calculateTradeLevels(currentEntry, currentTrend);
+        setTradeLevels(levels);
+      }
+    }
+  }
+
   // ----- WEBSOCKET FOR LIVE PRICE -----
   useEffect(() => {
     if (!reportData?.instrument) {
@@ -382,10 +405,27 @@ function AIAssistant() {
       return;
     }
 
+    const assetName = normalizeInstrument(reportData.instrument);
+    const isGold = assetName.includes("XAU") || assetName.includes("Gold");
+    const isMetal = assetName.includes("XAG") || assetName.includes("Silver") || 
+                   assetName.includes("XPT") || assetName.includes("Platinum") ||
+                   assetName.includes("XPD") || assetName.includes("Palladium");
+
+    // For gold and metals, use the free API instead of Binance
+    if (isGold || isMetal) {
+      fetchGoldPrice(reportData?.trend, reportData?.entry);
+      // Refresh every 30 seconds
+      const interval = setInterval(() => fetchGoldPrice(reportData?.trend, reportData?.entry), 30000);
+      return () => clearInterval(interval);
+    }
+
     const stream = getCryptoStream(reportData.instrument);
 
     if (!stream) {
-      setLivePrice(null);
+      // For indices and commodities, use entry price as fallback
+      setLivePrice(reportData.entry);
+      const levels = calculateTradeLevels(reportData.entry, reportData?.trend);
+      setTradeLevels(levels);
       return;
     }
 
@@ -417,7 +457,7 @@ function AIAssistant() {
     return () => {
       ws.close();
     };
-  }, [reportData?.instrument]);
+  }, [reportData?.instrument, reportData?.entry, reportData?.trend]);
 
   // ----- TRADING VIEW CHART -----
   useEffect(() => {

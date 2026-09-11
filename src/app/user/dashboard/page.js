@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserId } from "@/app/api/auth";
 import { botActivate } from "@/app/redux/slices/fundManagerSlice"
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import XoxoFxChatbot from '../components/Xoxofxchatbot';
 import RankProgress from '../components/RankProgress';
 import { useTheme } from '@/components/ThemeProvider';
@@ -63,17 +64,19 @@ export default function DashboardPage() {
 
   const rankProgress = () => {
     const data = dashboardData?.[0] || {};
-    const currentRank = data?.NextRank || 'LT1';
+    const currentRank = data?.NextRank || 'N/A';
+    console.log("OOOO",currentRank)
 
     const currentIndex = rankOrder.indexOf(currentRank);
 
     if (currentIndex === -1) return 0;
-    const percentage = Math.round(((currentIndex + 1) / totalRanks) * 100);
+    const percentage = Math.round((currentIndex / (totalRanks - 1)) * 100);
 
     return percentage;
   };
 
   const rankPct = rankProgress();
+  console.log("TTT",rankPct)
   const currentRank = dashboardData?.[0]?.UserRank || 'LT1';
   const currentRankIndex = rankOrder.indexOf(currentRank);
   const growthLevels = rankOrder.map((rank, index) => ({
@@ -941,6 +944,9 @@ export default function DashboardPage() {
                 <div className="dx-tip-box mb-2" style={{ background: "rgba(245,158,11,0.08)", color: "#b45309" }}>
                   🛒 Choose a package that suits your investment goals and start earning!
                 </div>
+                <Link href="/user/dashboard/AI-Trading-Bots" className="btn btn-warning btn-lg w-100">
+                  Click to Purchase Bot
+                </Link>
               </div>
             </div>
           </div>
@@ -1190,7 +1196,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="quantum-network-metric-row">
                       <span className="quantum-network-metric-tag">Strong Leg ID</span>
-                      <span className="quantum-network-value-white">{dashboardData?.[0]?.weeklyTeamStrongLegID || 0}</span>
+                      <span className="quantum-network-value-white1">{dashboardData?.[0]?.weeklyTeamStrongLegID || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -1275,7 +1281,7 @@ export default function DashboardPage() {
                   colorTo="#14b8a6"
                   gradId="growthGrad"
                   centerTop={`${rankPct}%`}
-                  centerBottom={`${dashboardData?.[0]?.NextRank || 'V1'} Progress`}
+                  centerBottom={`${dashboardData?.[0]?.NextRank || ''} Progress`}
                 />
               </div>
             </div>
@@ -1584,7 +1590,7 @@ export default function DashboardPage() {
                     <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
                   </svg>
                 </StatIcon>
-                <div className="dx-biz-value mt-3"> {(strongTeamBusiness || '0')}</div>
+                <div className="dx-biz-value1 mt-3"> {(strongTeamBusiness || '0')}</div>
                 <div className="dx-biz-label">Power Team ID</div>
                 <MiniBars seed={4} />
               </div>

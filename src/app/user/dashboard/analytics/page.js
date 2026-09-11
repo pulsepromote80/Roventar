@@ -31,19 +31,19 @@ export default function ArbionEngine() {
   const chartData = useMemo(() => {
     if (!tradeHistory || tradeHistory.length === 0) {
       return {
-        pnlData: Array.from({ length: 90 }, (_, i) => i * 91.57),
+        pnlData: Array.from({ length: 90 }, () => 0),
         pnlLabels: Array.from({ length: 90 }, (_, i) => {
           const d = new Date();
           d.setDate(d.getDate() - (89 - i));
           return formatChartDate(d);
         }),
-        dailyData: Array.from({ length: 30 }, () => Math.floor(60 + Math.random() * 280)),
+        dailyData: Array.from({ length: 30 }, () => 0),
         dailyLabels: Array.from({ length: 30 }, (_, i) => {
           const d = new Date();
           d.setDate(d.getDate() - (29 - i));
           return formatChartDate(d);
         }),
-        chainData: { solana: 52, ethereum: 31, bsc: 17 }
+        chainData: { solana: 0, ethereum: 0, bsc: 0 }
       };
     }
 
@@ -155,13 +155,13 @@ export default function ArbionEngine() {
   const metrics = useMemo(() => {
     if (!tradeHistory || tradeHistory.length === 0) {
       return {
-        totalProfit: 8241,
-        realizedPnL: 6847,
-        totalTrades: 12847,
-        winLoss: { wins: 1190, losses: 107 },
-        avgProfit: 0.64,
-        profitChange: 0.08,
-        winRate: 91.8
+        totalProfit: 0,
+        realizedPnL: 0,
+        totalTrades: 0,
+        winLoss: { wins: 0, losses: 0 },
+        avgProfit: 0,
+        profitChange: 0,
+        winRate: 0
       };
     }
 
@@ -215,7 +215,7 @@ export default function ArbionEngine() {
 
   // Total PnL for tag
   const totalPnL = useMemo(() => {
-    if (!tradeHistory || tradeHistory.length === 0) return 8241;
+    if (!tradeHistory || tradeHistory.length === 0) return 0;
     return tradeHistory.reduce((sum, trade) => {
       return sum + (parseFloat(trade.Profit) || 0);
     }, 0);

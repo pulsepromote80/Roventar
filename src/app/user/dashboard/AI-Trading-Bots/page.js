@@ -623,7 +623,7 @@ function BotCard({ bot, marketPrices, lastUpdate, chartData, livePrice, wsConnec
         <div className="sb-stats-grid">
           <div className="sb-stat-item">
             <p className="sb-stat-label">Backtest APR</p>
-            <p className="sb-stat-value">{bot.apr}</p>
+            <p className="sb-stat-value">{'7% to 16%'}</p>
           </div>
           <div className="sb-stat-item sb-stat-border">
             <p className="sb-stat-label">Win Rate</p>
@@ -3185,7 +3185,7 @@ export default function SonicScalper() {
                         </div>
                         <div class="card">
                             <div class="label">APY</div>
-                            <div class="value">${typeof roiValue === 'number' ? roiValue.toFixed(2) : roiValue}%</div>
+                            <div class="value">7% - 16%</div>
                         </div>
                     </div>
                 </div>

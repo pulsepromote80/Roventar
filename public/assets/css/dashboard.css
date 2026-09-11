@@ -17222,6 +17222,12 @@ html[data-theme="dark"] .dx-ann-item {
   color: var(--dashboardroot-ink);
   letter-spacing: -.4px;
 }
+.dx-biz-value1 {
+  font-size: 18px; /* pehle 24px tha, ab thoda chhota */
+  font-weight: 800;
+  color: var(--dashboardroot-ink);
+  letter-spacing: -.4px;
+}
 
 .dx-biz-sub {
   font-size: 12px;
