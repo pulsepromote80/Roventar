@@ -281,7 +281,7 @@ export default function DashboardPage() {
     }
   }, [botStatus, dashboardData]);
 
-  const totalIncome = Number(dashboardData?.[0]?.TotalIncome ?? 0);
+  const totalIncome = Number(dashboardData?.[0]?.totatRoiLevelIncome ?? 0);
   const earningLimit = Number(dashboardData?.[0]?.EarningLimit ?? 0);
   const remainingLimit = Number(dashboardData?.[0]?.RemainingLimit ?? Math.max(0, earningLimit - totalIncome));
   const usedPercentage = earningLimit > 0 ? Math.min(100, (totalIncome / earningLimit) * 100) : 0;
@@ -1132,7 +1132,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="col-4">
                     <div className="dx-mini-stat-label">{dashboardData?.[0]?.ac_totalQualifyBoot}X Boost</div>
-                    <div className="fw-bold" style={{ color: "#10b981" }}>${(dashboardData?.[0]?.EarningLimit || 0).toFixed(2) || "0.00"}</div>
+                    <div className="fw-bold" style={{ color: "#10b981" }}>${(dashboardData?.[0]?.BoostLimit || 0).toFixed(2) || "0.00"}</div>
                   </div>
                 </div>
               </div>
