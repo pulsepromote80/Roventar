@@ -687,7 +687,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   Invite &amp; <span style={{ color: "#a78bfa" }}>Earn</span>
                 </div>
                 <div style={{ fontSize: "11.5px", color: "var(--t2)", lineHeight: 1.6 }}>
-                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>5% commission</strong> on every trade — 3 levels deep, paid daily
+                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>5% commission</strong> on every trade
                 </div>
               </div>
 

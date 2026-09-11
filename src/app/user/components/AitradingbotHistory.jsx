@@ -858,7 +858,7 @@ const styles = `
 
 
 
-function HistoryCard({ transaction, index }) {
+function HistoryCard({ transaction, index, onRefresh }) {
 
   const dispatch = useDispatch();
   const getStatus = () => {
@@ -937,6 +937,7 @@ function HistoryCard({ transaction, index }) {
     return `$${num.toFixed(2)}`;
   };
 
+  
   // Format ROI
   const formatROI = (roi) => {
     if (!roi && roi !== 0) return '0%';
@@ -1046,30 +1047,36 @@ function HistoryCard({ transaction, index }) {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' }}>
 
-                <button
-                  onClick={() => setShowWithdrawalModal(true)}
-                  style={{
-                    padding: '4px 12px',
-                    border: '1px solid var(--sb-blue)',
-                    borderRadius: '6px',
-                    background: 'var(--sb-blue)',
-                    color: '#fff',
-                    fontSize: '11px',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all var(--sb-transition)'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.background = 'var(--sb-blue-dark)';
-                    e.target.style.borderColor = 'var(--sb-blue-dark)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.background = 'var(--sb-blue)';
-                    e.target.style.borderColor = 'var(--sb-blue)';
-                  }}
-                >
-                  Withdrawal
-                </button>
+                {!transaction.Widstatus || transaction.Widstatus === '' ? (
+                  <button
+                    onClick={() => setShowWithdrawalModal(true)}
+                    style={{
+                      padding: '4px 12px',
+                      border: '1px solid var(--sb-blue)',
+                      borderRadius: '6px',
+                      background: 'var(--sb-blue)',
+                      color: '#fff',
+                      fontSize: '11px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all var(--sb-transition)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.background = 'var(--sb-blue-dark)';
+                      e.target.style.borderColor = 'var(--sb-blue-dark)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.background = 'var(--sb-blue)';
+                      e.target.style.borderColor = 'var(--sb-blue)';
+                    }}
+                  >
+                    Withdrawal
+                  </button>
+                ) : (
+                  <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--sb-green)' }}>
+                    {transaction.Widstatus}
+                  </span>
+                )}
               </div>
 
             </div>
@@ -1098,17 +1105,25 @@ function HistoryCard({ transaction, index }) {
               Principal Withdrawal
             </h3>
 
-            <div className="sb-modal-info-box">
-              <div className="sb-modal-info-label">Amount</div>
-              <div className="sb-modal-info-value sb-modal-info-value-large">
-                {formatAmount(transaction.Rkprice)}
+            <div className="sb-modal-info-box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div className="sb-modal-info-label">Amount</div>
+                <div className="sb-modal-info-value sb-modal-info-value-large">
+                  {formatAmount(transaction.Rkprice)}
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="sb-modal-info-label">Package</div>
+                <div className="sb-modal-info-value">
+                  {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+                </div>
               </div>
             </div>
 
             <div className="sb-modal-info-box">
-              <div className="sb-modal-info-label">Package</div>
-              <div className="sb-modal-info-value">
-                {transaction.PackageName ? transaction.PackageName.split(',')[0].trim() : 'Basic'}
+                <div className="sb-modal-info-label">Net Amount</div>
+                <div className="sb-modal-info-value sb-modal-info-value-large">
+                {formatAmount(transaction.Rkprice * 0.85)}
               </div>
             </div>
 
@@ -1122,7 +1137,7 @@ function HistoryCard({ transaction, index }) {
                   fontWeight: '500'
                 }}
               >
-                Remark
+                Remark <span style={{ color: 'var(--sb-red)' }}>*</span>
               </label>
               <textarea
                 className="sb-modal-textarea"
@@ -1146,6 +1161,12 @@ function HistoryCard({ transaction, index }) {
                 className="sb-modal-btn sb-modal-btn-primary"
                 onClick={async () => {
                   try {
+                    // Validate remark is mandatory
+                    if (!remark || remark.trim() === '') {
+                      toast.error('Remark is required');
+                      return;
+                    }
+                    
                     setIsWithdrawing(true);
                     
                     const withdrawalData = {
@@ -1159,6 +1180,10 @@ function HistoryCard({ transaction, index }) {
                       toast.success(result.message);
                       setShowWithdrawalModal(false);
                       setRemark('');
+                      
+                      if (onRefresh) {
+                        onRefresh();
+                      }
                     } else {
                       toast.error(result?.message || 'Failed to submit withdrawal request');
                     }
@@ -1228,54 +1253,54 @@ export default function InvestmentHistory() {
   };
 
   // Fetch transaction history
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchHistory = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        // Get userId from auth
-        const userId = getUserId();
+      // Get userId from auth
+      const userId = getUserId();
 
-        // Call the API
-        const result = await dispatch(getRechargetransactionHIstory()).unwrap();
+      // Call the API
+      const result = await dispatch(getRechargetransactionHIstory()).unwrap();
 
-        let historyData = [];
+      let historyData = [];
 
-        if (result?.data && Array.isArray(result.data)) {
-          historyData = result.data;
-        } else if (Array.isArray(result)) {
-          historyData = result;
-        } else if (result?.transactions && Array.isArray(result.transactions)) {
-          historyData = result.transactions;
-        } else {
-          // If data is wrapped in another structure
-          const data = result?.data || result;
-          if (Array.isArray(data)) {
-            historyData = data;
-          } else if (data && typeof data === 'object') {
-            // Check if it's a single transaction object
-            if (data.Rkprice !== undefined || data.CategoryName) {
-              historyData = [data];
-            }
+      if (result?.data && Array.isArray(result.data)) {
+        historyData = result.data;
+      } else if (Array.isArray(result)) {
+        historyData = result;
+      } else if (result?.transactions && Array.isArray(result.transactions)) {
+        historyData = result.transactions;
+      } else {
+        // If data is wrapped in another structure
+        const data = result?.data || result;
+        if (Array.isArray(data)) {
+          historyData = data;
+        } else if (data && typeof data === 'object') {
+          // Check if it's a single transaction object
+          if (data.Rkprice !== undefined || data.CategoryName) {
+            historyData = [data];
           }
         }
-
-        historyData = historyData.filter(item => item && typeof item === 'object' && (item.Rkprice !== undefined || item.CategoryName));
-        setTransactions(historyData);
-
-        if (historyData.length === 0) {
-          console.log('No transaction data found in response');
-        }
-      } catch (err) {
-        console.error('Error fetching investment history:', err);
-        setError(err?.message || 'Failed to load investment history');
-        setTransactions([]);
-      } finally {
-        setLoading(false);
       }
-    };
 
+      historyData = historyData.filter(item => item && typeof item === 'object' && (item.Rkprice !== undefined || item.CategoryName));
+      setTransactions(historyData);
+
+      if (historyData.length === 0) {
+        console.log('No transaction data found in response');
+      }
+    } catch (err) {
+      console.error('Error fetching investment history:', err);
+      setError(err?.message || 'Failed to load investment history');
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchHistory();
   }, [dispatch]);
 
@@ -1421,6 +1446,7 @@ export default function InvestmentHistory() {
                 key={transaction.id || transaction.transactionId || index}
                 transaction={transaction}
                 index={index}
+                onRefresh={fetchHistory}
               />
             ))
           ) : (

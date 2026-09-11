@@ -1301,14 +1301,15 @@ export default function HomePage() {
                 Legal
               </h5>
               {[
-                ["#", "Privacy Policy"],
-                ["#", "Terms & Conditions"],
+
                 ["#", "Risk Disclosure"],
-                ["#", "Contact"],
+                ["https://apis.roventar.com/AML.pdf", "AML clauses"],
               ].map(([href, label], i) => (
                 <a
                   key={label + i}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block text-[#8ea0b5] text-[0.88rem] mb-3 transition-colors duration-250 hover:text-[#22e8d4]"
                 >
                   {label}
