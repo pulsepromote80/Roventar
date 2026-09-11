@@ -9,6 +9,7 @@ import TradingViewTicker from "./TradingViewTicker";
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aiSignalConfidence, setAiSignalConfidence] = useState(87.3);
+  const [contactPopupOpen, setContactPopupOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
@@ -1289,6 +1290,7 @@ export default function HomePage() {
                 <a
                   key={label + i}
                   href={href}
+                  onClick={label === "Contact" ? (e) => { e.preventDefault(); setContactPopupOpen(true); } : undefined}
                   className="block text-[#8ea0b5] text-[0.88rem] mb-3 transition-colors duration-250 hover:text-[#22e8d4]"
                 >
                   {label}
@@ -1338,6 +1340,47 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Contact Popup */}
+      {contactPopupOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setContactPopupOpen(false)}
+        >
+          <div 
+            className="relative bg-[#0a1120] border border-[rgba(140,180,200,0.14)] rounded-2xl p-4 max-w-sm w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setContactPopupOpen(false)}
+              className="absolute top-3 right-3 text-[#8ea0b5] hover:text-[#22e8d4] transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            
+            <h3 className="font-display font-semibold text-[#eef3f8] text-xl mb-4">Contact Information</h3>
+             <div className="text-[#8ea0b5] leading-relaxed">
+              <p className="text-[0.82rem]">
+                <span className="text-[#22e8d4] font-semibold">Address:</span>  <span className="text-[#eef3f8]">117 S Lexington St Ste 100 HARRISONVILLE</span><br />
+               
+              </p>
+            </div>
+            <div className="mb-4">
+              <img 
+                src="/certificate.png" 
+                alt="Certificate" 
+                className="w-full rounded-lg border border-[rgba(140,180,200,0.14)]"
+              />
+            </div>
+            
+           
+          </div>
+        </div>
+      )}
+
       <Script src="/script.js" strategy="afterInteractive" />
     </>
   );

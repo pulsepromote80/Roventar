@@ -29,6 +29,7 @@ import { AuthLogin, getUserId } from "@/app/api/auth";
 import { activeProducts, productLoading } from "@/app/(main)/admin/product/product-selectors";
 import html2pdf from 'html2pdf.js';
 import InvestmentHistory from "../../components/AitradingbotHistory";
+import { decryptData } from "@/app/utils/encryption";
 
 
 
@@ -653,6 +654,119 @@ function InvestModal({ bot, onClose, onSubmit, walletBalance, isLoading }) {
   const [customAmount, setCustomAmount] = useState("");
   const [amountError, setAmountError] = useState("");
 
+  // ===== HELPER: Normalize value =====
+  const normalizeTextValue = (value) => (value == null ? "" : String(value));
+
+  // ===== HELPER: Get logged-in user ID from multiple sources =====
+  const getLoggedInUserId = () => {
+    if (typeof window === "undefined") return "";
+
+    const candidates = [];
+
+    // 1. Direct AuthLogin() API
+    try {
+      const directAuthLogin = AuthLogin();
+      if (directAuthLogin) {
+        candidates.push(normalizeTextValue(directAuthLogin));
+      }
+    } catch (e) {
+      // silent
+    }
+
+    // 2. loginId (encrypted) from localStorage
+    try {
+      const loginId = localStorage.getItem("loginId");
+      if (loginId) {
+        const decryptedLoginId = decryptData(loginId);
+        if (decryptedLoginId) {
+          candidates.push(normalizeTextValue(decryptedLoginId));
+        }
+      }
+    } catch (e) {
+      // silent
+    }
+
+    // 3. currentUserPlain (JSON) from localStorage
+    try {
+      const currentUserPlain = localStorage.getItem("currentUserPlain");
+      if (currentUserPlain) {
+        const parsedUser = JSON.parse(currentUserPlain);
+        const profile = parsedUser?.userData || parsedUser || {};
+        const authLogin =
+          profile?.AuthLogin ||
+          profile?.authLogin ||
+          profile?.username ||
+          profile?.UserId ||
+          profile?.userId ||
+          profile?.URID ||
+          profile?.urid ||
+          profile?.LoginId ||
+          profile?.loginId ||
+          parsedUser?.AuthLogin ||
+          parsedUser?.authLogin ||
+          parsedUser?.username ||
+          parsedUser?.UserId ||
+          parsedUser?.userId ||
+          parsedUser?.URID ||
+          parsedUser?.urid ||
+          parsedUser?.LoginId ||
+          parsedUser?.loginId ||
+          "";
+        if (authLogin) {
+          candidates.push(normalizeTextValue(authLogin));
+        }
+      }
+    } catch (e) {
+      // silent
+    }
+
+    // 4. currentUser (encrypted) from localStorage
+    try {
+      const encryptedCurrentUser = localStorage.getItem("currentUser");
+      if (encryptedCurrentUser) {
+        const decryptedUser = decryptData(encryptedCurrentUser);
+        const parsedUser = typeof decryptedUser === "string" ? JSON.parse(decryptedUser) : decryptedUser;
+        const profile = parsedUser?.userData || parsedUser || {};
+        const authLogin =
+          profile?.AuthLogin ||
+          profile?.authLogin ||
+          profile?.username ||
+          profile?.UserId ||
+          profile?.userId ||
+          profile?.URID ||
+          profile?.urid ||
+          profile?.LoginId ||
+          profile?.loginId ||
+          parsedUser?.AuthLogin ||
+          parsedUser?.authLogin ||
+          parsedUser?.username ||
+          parsedUser?.UserId ||
+          parsedUser?.userId ||
+          parsedUser?.URID ||
+          parsedUser?.urid ||
+          parsedUser?.LoginId ||
+          parsedUser?.loginId ||
+          "";
+        if (authLogin) {
+          candidates.push(normalizeTextValue(authLogin));
+        }
+      }
+    } catch (e) {
+      // silent
+    }
+
+    return candidates.find(Boolean) || "";
+  };
+
+  // ===== AUTO-FILL logged-in user ID on modal open =====
+  useEffect(() => {
+    const loggedInUserId = getLoggedInUserId();
+    if (loggedInUserId) {
+      setUid(loggedInUserId);
+    }
+  }, []);
+
+  // ===== Fetch username when uid changes =====
   useEffect(() => {
     const fetchUsername = async () => {
       if (!uid.trim()) {
@@ -818,14 +932,19 @@ function InvestModal({ bot, onClose, onSubmit, walletBalance, isLoading }) {
           </div>
         </div>
 
-        {/* User ID Input */}
+        {/* User ID Input - AUTO-FILLED & READ ONLY */}
         <div className="sb-modal-field">
           <label className="sb-modal-label">User ID *</label>
           <input
             className="sb-modal-input"
-            placeholder="Enter User ID (e.g. test@gmail.com)"
+            placeholder="Enter User ID"
             value={uid}
-            onChange={e => setUid(e.target.value)}
+            readOnly
+            style={{
+              backgroundColor: "var(--sb-bg-2)",
+              cursor: "not-allowed",
+              opacity: 0.85,
+            }}
           />
           {!uid.trim() ? (
             <div className="sb-modal-error">⚠ Please enter User ID</div>
