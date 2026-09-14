@@ -3410,7 +3410,7 @@ export default function SonicScalper() {
 
   // Handle investment submission
   const handleInvestSubmit = async ({ uid, uname, userURID, amount, bot }) => {
-    console.log("TTT",bot)
+
     setIsProcessing(true);
 
     try {

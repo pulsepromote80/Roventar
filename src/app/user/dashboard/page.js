@@ -65,7 +65,6 @@ export default function DashboardPage() {
   const rankProgress = () => {
     const data = dashboardData?.[0] || {};
     const currentRank = data?.NextRank || 'N/A';
-    console.log("OOOO",currentRank)
 
     const currentIndex = rankOrder.indexOf(currentRank);
 
@@ -76,7 +75,6 @@ export default function DashboardPage() {
   };
 
   const rankPct = rankProgress();
-  console.log("TTT",rankPct)
   const currentRank = dashboardData?.[0]?.UserRank || 'LT1';
   const currentRankIndex = rankOrder.indexOf(currentRank);
   const growthLevels = rankOrder.map((rank, index) => ({

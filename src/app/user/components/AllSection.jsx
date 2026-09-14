@@ -1320,7 +1320,7 @@ export default function HomePage() {
                 <a
                   key={label + i}
                   href={href}
-                  
+                  target="_blank"
                   className="block text-[#8ea0b5] text-[0.88rem] mb-3 transition-colors duration-250 hover:text-[#22e8d4]"
                 >
                   {label}
