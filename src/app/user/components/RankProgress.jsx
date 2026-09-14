@@ -204,7 +204,7 @@ export default function RankProgress({
 
                   {/* Trading Package */}
 
-                  <span className="dx-badge-chip success">
+                  {/* <span className="dx-badge-chip success">
                     <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
                       <polyline
                         points="2,8 5.5,11.5 14,3.5"
@@ -215,21 +215,51 @@ export default function RankProgress({
                       />
                     </svg>
                     Trading Package Active
-                  </span>
+                  </span> */}
 
                   {/* Account */}
 
-                  <span className="dx-badge-chip success">
-                    <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
-                      <polyline
-                        points="2,8 5.5,11.5 14,3.5"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    Account Active
+                  <span
+                    className={`dx-badge-chip ${Activebot?.toLowerCase()?.includes("inactive") ? "error" : "success"}`}
+                    style={Activebot?.toLowerCase()?.includes("inactive") ? {
+                      background: "rgba(239, 68, 68, 0.1)",
+                      color: "#ef4444",
+                      border: "1px solid rgba(239, 68, 68, 0.2)"
+                    } : {}}
+                  >
+                    {Activebot?.toLowerCase()?.includes("inactive") ? (
+                      <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                        <line
+                          x1="3"
+                          y1="3"
+                          x2="13"
+                          y2="13"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                        <line
+                          x1="13"
+                          y1="3"
+                          x2="3"
+                          y2="13"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    ) : (
+                      <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                        <polyline
+                          points="2,8 5.5,11.5 14,3.5"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>      
+                    )}
+                   {Activebot}
                   </span>
                 </div>
               </div>

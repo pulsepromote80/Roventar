@@ -12,6 +12,25 @@ import {
 import { getUserId } from "@/app/api/auth";
 import { getWithdrawalHistory } from "@/app/redux/slices/walletSlice";
 
+// Helper function to check if a string is a valid transaction hash or URL
+const isValidTxHash = (hash) => {
+  if (!hash || typeof hash !== 'string') return false;
+  // Check if it's a status message (contains common status words)
+  const statusWords = ['will be', 'process', 'pending', 'approved', 'rejected', 'processing', 'within'];
+  const lowerHash = hash.toLowerCase();
+  if (statusWords.some(word => lowerHash.includes(word))) return false;
+  // Check if it's a URL (starts with http) or a hash (starts with 0x)
+  return hash.startsWith('http') || (hash.startsWith('0x') && hash.length >= 10 && /^[a-zA-Z0-9]+$/.test(hash));
+};
+
+// Helper function to get the transaction URL
+const getTxUrl = (hash) => {
+  if (hash.startsWith('http')) {
+    return hash; // Already a full URL
+  }
+  return `https://bscscan.com/tx/${hash}`; // Construct URL from hash
+};
+
 const WalletStatement = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState("Deposit");
@@ -252,28 +271,39 @@ const WalletStatement = () => {
                           <td>{item.debit || "-"}</td>
                           <td>
                             <div className="d-flex align-items-center gap-2">
-                              <span
-                                title={item.Transhash || "-"}
-                                style={{
-                                  maxWidth: "180px",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                  display: "inline-block"
-                                }}
-                              >
-                                {item.Transhash || "-"}
-                              </span>
-                              {item.Transhash && (
-                                <button
-                                  type="button"
-                                  className="btn btn-sm p-0"
-                                  title="Copy Transaction Hash"
-                                  onClick={() => navigator.clipboard.writeText(item.Transhash)}
+                              {isValidTxHash(item.Transhash) ? (
+                                <a
+                                  href={getTxUrl(item.Transhash)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title={item.Transhash}
+                                  style={{
+                                    maxWidth: "300px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    display: "inline-block",
+                                    color: "#007bff",
+                                    textDecoration: "none"
+                                  }}
                                 >
-                                  <i className="fa fa-copy"></i>
-                                </button>
+                                  {item.Transhash}
+                                </a>
+                              ) : (
+                                <span
+                                  title={item.Transhash || "-"}
+                                  style={{
+                                    maxWidth: "300px",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    display: "inline-block"
+                                  }}
+                                >
+                                  {item.Transhash || "-"}
+                                </span>
                               )}
+
                             </div>
                           </td>
                           <td className="status-badge pending-bg status-1">{item.status || "-"}</td>

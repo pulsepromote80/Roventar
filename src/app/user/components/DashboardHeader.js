@@ -20,6 +20,7 @@ import {
   FiTrendingUp,
   FiLogOut,
   FiAward,
+  FiHeadphones ,
   FiBookOpen // Added for Fund Director icon
 } from "react-icons/fi";
 import { FaBitcoin } from "react-icons/fa";
@@ -161,6 +162,13 @@ export default function DashboardHeader({
             <FiUser />
           </span>
           <span>Profile</span>
+        </Link>
+
+        <Link href="/user/dashboard/support" onClick={handleNavClick} className={"ni " + (pathname === '/user/dashboard/support' ? 'on' : '')}>
+          <span className="ic">
+            <FiHeadphones  />
+          </span>
+          <span>Support</span>
         </Link>
         <Link
           href="/user/login"

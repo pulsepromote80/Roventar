@@ -110,7 +110,7 @@ export default function WelcomePage() {
           {/* Logo */}
           <div className="d-flex justify-content-center mb-2">
             <a href='/'>
-              <img src="/logo.png" alt="Logo" className="login-logo" />
+              <img src="LOG02.png" alt="Logo" className="login-logo" />
             </a>
           </div>
 

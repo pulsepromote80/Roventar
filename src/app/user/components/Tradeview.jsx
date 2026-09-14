@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, memo } from "react";
 
-function TradingViewWidget() {
+function TradingViewWidget({ defaultSymbol = "BINANCE:SOLUSDT" }) {
   const container = useRef(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function TradingViewWidget() {
     script.type = "text/javascript";
     script.async = true;
     script.innerHTML = JSON.stringify({
-      allow_symbol_change: false,
+      allow_symbol_change: true,
       calendar: false,
       details: false,
       hide_side_toolbar: true,
@@ -35,12 +35,11 @@ function TradingViewWidget() {
       locale: "en",
       save_image: true,
       style: "1",
-      symbol: "COINBASE:BTCUSD",
+      symbol: defaultSymbol,
       theme: "dark",
       timezone: "Etc/UTC",
       backgroundColor: "rgba(13, 20, 34, 0.5)",
       gridColor: "rgba(140, 180, 200, 0.08)",
-      watchlist: [],
       withdateranges: false,
       compareSymbols: [],
       studies: [],
@@ -53,7 +52,7 @@ function TradingViewWidget() {
         container.current.innerHTML = "";
       }
     };
-  }, []);
+  }, [defaultSymbol]);
 
   return (
     <div
