@@ -385,10 +385,12 @@ export default function SignupPage() {
   const [otpSent, setOtpSent] = useState(false)
   const [otpValue, setOtpValue] = useState("")
   const [otpLoading, setOtpLoading] = useState(false)
+  const [riskDisclosureAccepted, setRiskDisclosureAccepted] = useState(false)
+  const [showRiskDisclosure, setShowRiskDisclosure] = useState(false)
 
   const [errors, setErrors] = useState({
     firstName: "", lastName: "", email: "",
-    password: "", phoneNo: "", countryId: "", captcha: "", referralId: "", otp: "",
+    password: "", phoneNo: "", countryId: "", captcha: "", referralId: "", otp: "", riskDisclosure: "",
   })
 
   // const introSideOptions = [
@@ -699,7 +701,7 @@ export default function SignupPage() {
   }
 
   const validateForm = () => {
-    let newErrors = { firstName: "", lastName: "", email: "", password: "", phoneNo: "", countryId: "", captcha: "", referralId: "", otp: "" }
+    let newErrors = { firstName: "", lastName: "", email: "", password: "", phoneNo: "", countryId: "", captcha: "", referralId: "", otp: "", riskDisclosure: "" }
 
     if (!formData.firstName?.trim()) newErrors.firstName = "First name is required"
     else if (formData.firstName.trim().length < 2) newErrors.firstName = "At least 2 characters"
@@ -726,6 +728,8 @@ export default function SignupPage() {
     if (!otpSent) newErrors.otp = "Please send OTP first"
     else if (!otpValue.trim()) newErrors.otp = "OTP is required"
     else if (otpValue.length < 6) newErrors.otp = "OTP must be 6 digits"
+
+    if (!riskDisclosureAccepted) newErrors.riskDisclosure = "Please accept the Risk Disclosure to continue"
 
     setErrors(newErrors)
     return !Object.values(newErrors).some(error => error !== "")
@@ -1170,9 +1174,83 @@ export default function SignupPage() {
               </div>
             </div>
 
+            <div className="row g-3 mb-4">
+              <div className="col-12">
+                <div className="d-flex align-items-start gap-2">
+                  <div
+                    onClick={() => {
+                      const newValue = !riskDisclosureAccepted
+                      setRiskDisclosureAccepted(newValue)
+                      setShowRiskDisclosure(newValue)
+                      if (newValue && errors.riskDisclosure) {
+                        setErrors(prev => ({ ...prev, riskDisclosure: "" }))
+                      }
+                    }}
+                    style={{
+                      marginTop: "2px",
+                      width: "18px",
+                      height: "18px",
+                      cursor: "pointer",
+                      border: riskDisclosureAccepted ? "2px solid #22e8d4" : "2px solid rgba(140,180,200,0.5)",
+                      borderRadius: "3px",
+                      background: riskDisclosureAccepted ? "#22e8d4" : "transparent",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0
+                    }}
+                  >
+                    {riskDisclosureAccepted && (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#04060b" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                  </div>
+                  <label
+                    onClick={() => {
+                      const newValue = !riskDisclosureAccepted
+                      setRiskDisclosureAccepted(newValue)
+                      setShowRiskDisclosure(newValue)
+                      if (newValue && errors.riskDisclosure) {
+                        setErrors(prev => ({ ...prev, riskDisclosure: "" }))
+                      }
+                    }}
+                    className="login-label"
+                    style={{
+                      cursor: "pointer",
+                      fontSize: "12px",
+                      lineHeight: "1.4",
+                      color: "#8ea0b5"
+                    }}
+                  >
+                    I accept the Risk Disclosure
+                  </label>
+                </div>
+                {showRiskDisclosure && (
+                  <div className="mt-2 px-3 py-2" style={{
+                    background: "rgba(34, 232, 212, 0.05)",
+                    border: "1px solid rgba(34, 232, 212, 0.15)",
+                    borderRadius: "8px",
+                    fontSize: "11px",
+                    lineHeight: "1.5",
+                    color: "#8ea0b5"
+                  }}>
+                    Trading
+                    forex and digital assets involves substantial risk and may not be
+                    suitable for all users. Past performance is not indicative of future
+                    results, and no returns or outcomes are guaranteed. Figures and
+                    charts on this site are illustrative and for demonstration purposes
+                    only. Placeholder content — replace with verified regulatory and
+                    legal information before launch.
+                  </div>
+                )}
+                {errors.riskDisclosure && <div className="error-message text-center" style={errorStyle}>{errors.riskDisclosure}</div>}
+              </div>
+            </div>
+
             <button
               type="submit"
-              disabled={loading || !otpSent}
+              disabled={loading || !otpSent || !riskDisclosureAccepted}
               className={`btn w-100 d-flex align-items-center justify-content-center gap-2 fw-bold text-uppercase mt-2 login-submit ${loading ? 'login-submit-loading' : ''}`}
             >
               {loading && (

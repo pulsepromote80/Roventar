@@ -378,7 +378,11 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
         <div className="tb-r">
           <div className="schip" onClick={() => setShowBotPopup(true)} style={{ cursor: "pointer" }}>
             <span className="dot dc"></span>
-            {dashboardData?.[0]?.BotStatus || "BOT ACTIVE"}
+            {dashboardData?.[0]?.BotStatus?.toLowerCase()?.includes("inactive") ? (
+              <span style={{ color: "#ef4444", fontWeight: "bold" }}>{dashboardData?.[0]?.BotStatus}</span>
+            ) : (
+              dashboardData?.[0]?.BotStatus || "BOT ACTIVE"
+            )}
           </div>
 
           <div className="schip" onClick={() => setShowRefPopup(true)} style={{ cursor: "pointer" }}>
@@ -653,7 +657,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   Bot <span style={{ color: "#34d399" }}>Status</span>
                 </div>
                 <div style={{ fontSize: "11.5px", color: "var(--t2)", lineHeight: 1.6 }}>
-                  Your trading bot is currently <strong style={{ color: "#34d399" }}>ACTIVE</strong>
+                  Your trading bot is currently <strong style={{ color: "#34d399" }}>{dashboardData?.[0]?.BotStatus}</strong>
                 </div>
               </div>
               <div style={{
@@ -665,9 +669,16 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                 <button
                   className="copy-btn"
                   onClick={activateBot}
-                  style={{ background: "#34d399", color: "#000" }}
+                  style={{
+                    background: dashboardData?.[0]?.BotStatus?.toLowerCase()?.includes("inactive") ? "#ef4444" : "#34d399",
+                    color: dashboardData?.[0]?.BotStatus?.toLowerCase()?.includes("inactive") ? "#fff" : "#000"
+                  }}
                 >
-                  ✓ Bot Active
+                  {dashboardData?.[0]?.BotStatus?.toLowerCase()?.includes("inactive") ? (
+                    <span style={{ color: "#fff", fontWeight: "bold" }}>{dashboardData?.[0]?.BotStatus}</span>
+                  ) : (
+                    `✓ ${dashboardData?.[0]?.BotStatus}`
+                  )}
                 </button>
               </div>
             </div>
@@ -687,7 +698,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
                   Invite &amp; <span style={{ color: "#a78bfa" }}>Earn</span>
                 </div>
                 <div style={{ fontSize: "11.5px", color: "var(--t2)", lineHeight: 1.6 }}>
-                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>5% commission</strong> on every trade
+                  Share your link · Earn up to <strong style={{ color: "#fbbf24" }}>5% commission</strong> on Every Direct Referral
                 </div>
               </div>
 

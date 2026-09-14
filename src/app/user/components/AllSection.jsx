@@ -10,6 +10,31 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [aiSignalConfidence, setAiSignalConfidence] = useState(87.3);
   const [contactPopupOpen, setContactPopupOpen] = useState(false);
+  const [selectedSymbol, setSelectedSymbol] = useState("TVC:GOLD");
+  const [selectedSymbolName, setSelectedSymbolName] = useState("GOLD / USD");
+
+  const symbols = [
+    { name: "GOLD / USD", symbol: "TVC:GOLD" },
+    { name: "SOL / USD", symbol: "BINANCE:SOLUSDT" },
+    { name: "ETH / USD", symbol: "BINANCE:ETHUSDT" },
+    { name: "BTC / USD", symbol: "BINANCE:BTCUSDT" },
+    { name: "XRP / USD", symbol: "BINANCE:XRPUSDT" },
+    { name: "ADA / USD", symbol: "BINANCE:ADAUSDT" },
+    { name: "DOGE / USD", symbol: "BINANCE:DOGEUSDT" },
+    { name: "MATIC / USD", symbol: "BINANCE:MATICUSDT" },
+    { name: "DOT / USD", symbol: "BINANCE:DOTUSDT" },
+    { name: "LINK / USD", symbol: "BINANCE:LINKUSDT" },
+    { name: "BNB / USD", symbol: "BINANCE:BNBUSDT" },
+    { name: "AVAX / USD", symbol: "BINANCE:AVAXUSDT" },
+    { name: "LTC / USD", symbol: "BINANCE:LTCUSDT" },
+    { name: "UNI / USD", symbol: "BINANCE:UNIUSDT" },
+    { name: "ATOM / USD", symbol: "BINANCE:ATOMUSDT" },
+  ];
+
+  const handleSymbolChange = (symbol, name) => {
+    setSelectedSymbol(symbol);
+    setSelectedSymbolName(name);
+  };
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
@@ -757,20 +782,25 @@ export default function HomePage() {
               <div className="grid gap-5 [grid-template-columns:2fr_1fr] max-[900px]:!grid-cols-1">
                 <div className="border border-[rgba(140,180,200,0.14)] rounded-2xl bg-white/[0.015] overflow-hidden">
                   <div className="p-5">
-                    <div className="flex justify-between items-baseline mb-1.5">
-                      <h4 className="font-display font-semibold text-[1.5rem] text-[#eef3f8]">
-                        BTC / USD
-                      </h4>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[0.85rem] text-[#22e8d4]">
-                          Live TradingView
-                        </span>
-                        <span className="w-2 h-2 rounded-full bg-[#22e8d4] animate-pulse" />
-                      </div>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {symbols.map((item) => (
+                        <button
+                          key={item.symbol}
+                          onClick={() => handleSymbolChange(item.symbol, item.name)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            selectedSymbol === item.symbol
+                              ? "bg-[#22e8d4] text-[#03110f]"
+                              : "bg-white/[0.05] text-[#8ea0b5] hover:bg-white/[0.1]"
+                          }`}
+                        >
+                          {item.name}
+                        </button>
+                      ))}
                     </div>
+                   
                   </div>
                   <div className="h-[500px]">
-                    <TradingViewWidget />
+                    <TradingViewWidget defaultSymbol={selectedSymbol} />
                   </div>
                 </div>
 
@@ -781,27 +811,27 @@ export default function HomePage() {
                         Portfolio Allocation
                       </span>
                     </div>
-                    {[
-                      ["BTC", 62],
-                      ["ETH", 41],
-                      ["FX", 74],
-                      ["SOL", 29],
-                    ].map(([label, w]) => (
-                      <div
-                        key={label}
-                        className="flex items-center gap-2.5 mt-2"
-                      >
-                        <span className="w-11 font-mono text-[0.68rem] text-[#5c6c80]">
-                          {label}
-                        </span>
-                        <div className="flex-1 h-[5px] rounded bg-white/[0.06] overflow-hidden">
-                          <div
-                            className="h-full rounded [background:linear-gradient(90deg,#22e8d4,#cba463)] transition-[width] duration-[1400ms]"
-                            style={{ width: `${w}%` }}
-                          />
+                    {symbols.map((item, index) => {
+                      const widths = [62, 41, 74, 29, 55, 38, 45, 67, 33, 58, 52, 48, 63, 39, 57]; // Fixed widths for consistency
+                      const width = widths[index % widths.length];
+                      const label = item.name.split(" / ")[0]; // Extract symbol name (e.g., "GOLD" from "GOLD / USD")
+                      return (
+                        <div
+                          key={item.symbol}
+                          className="flex items-center gap-2.5 mt-2"
+                        >
+                          <span className="w-11 font-mono text-[0.68rem] text-[#5c6c80]">
+                            {label}
+                          </span>
+                          <div className="flex-1 h-[5px] rounded bg-white/[0.06] overflow-hidden">
+                            <div
+                              className="h-full rounded [background:linear-gradient(90deg,#22e8d4,#cba463)] transition-[width] duration-[1400ms]"
+                              style={{ width: `${width}%` }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <div className="border border-[rgba(140,180,200,0.14)] rounded-2xl py-[18px] px-5 bg-white/[0.015]">
                     <div className="flex justify-between items-center mb-2.5">
@@ -1284,13 +1314,13 @@ export default function HomePage() {
               {[
                 ["#vision", "Vision"],
                 ["#faq", "FAQ"],
-                ["#", "Contact"],
                 ["#", "Careers"],
+                ["https://apis.roventar.com/AML.pdf", "AML clauses"],
               ].map(([href, label], i) => (
                 <a
                   key={label + i}
                   href={href}
-                  onClick={label === "Contact" ? (e) => { e.preventDefault(); setContactPopupOpen(true); } : undefined}
+                  
                   className="block text-[#8ea0b5] text-[0.88rem] mb-3 transition-colors duration-250 hover:text-[#22e8d4]"
                 >
                   {label}
@@ -1300,17 +1330,18 @@ export default function HomePage() {
 
             <div>
               <h5 className="font-mono text-[0.72rem] tracking-[0.12em] uppercase text-[#5c6c80] mb-[18px]">
-                Legal
+                Contact
               </h5>
               {[
 
-                ["#", "Risk Disclosure"],
-                ["https://apis.roventar.com/AML.pdf", "AML clauses"],
+                [, "117 S Lexington St Ste 100 HARRISONVILLE, United States"],
+                ["", "Legal"],
               ].map(([href, label], i) => (
                 <a
                   key={label + i}
                   href={href}
                   target="_blank"
+                  onClick={label === "Legal" ? (e) => { e.preventDefault(); setContactPopupOpen(true); } : undefined}
                   rel="noopener noreferrer"
                   className="block text-[#8ea0b5] text-[0.88rem] mb-3 transition-colors duration-250 hover:text-[#22e8d4]"
                 >
