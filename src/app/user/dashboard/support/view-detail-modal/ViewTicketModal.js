@@ -52,7 +52,17 @@ export default function ViewTicketModal({ open, onClose, ticket }) {
           </div>
 
           {/* Image if exists */}
-          {ticketDetail?.ImagePath && (
+          {(() => {
+            const imagePath = ticketDetail?.ImagePath;
+            if (!imagePath) return false;
+            if (typeof imagePath !== 'string') return false;
+            const trimmed = imagePath.trim();
+            if (!trimmed) return false;
+            if (trimmed === "NaN" || trimmed === "null" || trimmed === "undefined") return false;
+            if (!trimmed.startsWith('http') && !trimmed.startsWith('/')) return false;
+            if (trimmed.includes('/NaN') || trimmed.endsWith('/NaN')) return false;
+            return true;
+          })() && (
             <div style={{ marginBottom: "12px" }}>
               <img
                 src={ticketDetail.ImagePath}

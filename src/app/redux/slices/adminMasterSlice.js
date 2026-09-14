@@ -17,6 +17,7 @@ const API_ENDPOINTS = {
   CHANGE_ADMIN_SPONSOR_ID: "/AdminMaster/chanegAdminSponsorID",
   DOWNLOAD_EXCEL: "/AdminMaster/downloadExcel",
   GET_NEWS: "/AdminMaster/getNews",
+  GET_EDIT_NEWS: "/AdminMaster/getEditNews",
   UPDATE_NEWS: "/AdminMaster/updateNews",
   GET_LEASE_AGENT: "/AdminMaster/getLeaseAgent",
   GET_ALL_CONTACT_US: "/Geography/getAllContacUs",
@@ -182,17 +183,7 @@ export const getNews = createAsyncThunk(
   },
 );
 
-export const updateNews = createAsyncThunk(
-  "adminMaster/updateNews",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await postRequest(API_ENDPOINTS.UPDATE_NEWS, data);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Error fetching news");
-    }
-  },
-);
+
 
 export const getLeaseAgent = createAsyncThunk(
   "adminMaster/getLeaseAgent",
@@ -398,6 +389,30 @@ export const getAllWalletAddress = createAsyncThunk(
     }
   },
 );
+
+export const getEditNews = createAsyncThunk(
+  "adminMaster/getEditNews",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await postRequestWithToken(API_ENDPOINTS.GET_EDIT_NEWS, data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching edit news");
+    }
+  },
+);
+
+export const updateNews = createAsyncThunk(
+  "adminMaster/updateNews",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await postRequestWithToken(API_ENDPOINTS.UPDATE_NEWS, data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching news");
+    }
+  },
+);
 const adminMasterSlice = createSlice({
   name: "adminMaster",
   initialState: {
@@ -407,6 +422,7 @@ const adminMasterSlice = createSlice({
     ChangePasswordData: null,
     updateNewsData: null,
     newsData: null,
+    editNewsData: null,
     usernameData: null,
     blockUserData: null,
     sponserData: null,
@@ -532,6 +548,20 @@ const adminMasterSlice = createSlice({
         state.error = null;
       })
       .addCase(getNews.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(getEditNews.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getEditNews.fulfilled, (state, action) => {
+        state.loading = false;
+        state.editNewsData = action.payload;
+        state.error = null;
+      })
+      .addCase(getEditNews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
