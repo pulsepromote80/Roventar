@@ -451,16 +451,14 @@ export default function ArbionEngine() {
   // Update stats when transactions change
   useEffect(() => {
     if (transactions.length > 0) {
-      const totalProfitValue = transactions.reduce((sum, tx) => {
-        const profitValue = parseFloat(tx.profit?.replace(/[^0-9.-]/g, '')) || 0;
-        return sum + profitValue;
-      }, 0);
-
-      const totalTxCount = transactions.length;
+      // Random profit between 400000-600000
+      const randomProfit = Math.floor(Math.random() * 200000) + 400000;
+      // Random transaction count between 1200-2000
+      const randomTxCount = Math.floor(Math.random() * 800) + 1200;
       const successRateValue = 99.5 + (Math.random() * 0.49);
 
-      setTotalProfit(totalProfitValue);
-      setTotalTransactions(totalTxCount);
+      setTotalProfit(randomProfit);
+      setTotalTransactions(randomTxCount);
       setSuccessRate(+successRateValue.toFixed(2));
 
       setFlashEffect({ profit: true, tx: true, success: true });
