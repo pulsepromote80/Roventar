@@ -46,6 +46,20 @@ function useLiveMarket() {
 
 
   const realPricesRef = useRef({});
+  const weekendPriceCacheRef = useRef({});
+  const lastWeekdayCheckRef = useRef(null);
+
+  // Helper function to check if it's weekend (Saturday or Sunday)
+  const isWeekend = () => {
+    const day = new Date().getDay();
+    return day === 0 || day === 6; // 0 = Sunday, 6 = Saturday
+  };
+
+  // Helper function to check if it's Friday
+  const isFriday = () => {
+    const day = new Date().getDay();
+    return day === 5; // 5 = Friday
+  };
 
   const buildMarketPrices = () => {
     const bases = {
@@ -55,6 +69,83 @@ function useLiveMarket() {
       "USD/JPY": realPricesRef.current["USD/JPY"] ?? 146.217,
     };
 
+    const currentDay = new Date().getDay();
+    const isWeekendDay = isWeekend();
+    const isFridayDay = isFriday();
+
+    // Detect transition from Friday to Saturday (weekend start)
+    // Capture Friday's latest prices when weekend starts
+    if (isWeekendDay && lastWeekdayCheckRef.current !== null && lastWeekdayCheckRef.current === 5 && currentDay === 6) {
+      // We just transitioned from Friday to Saturday - cache Friday's prices
+      weekendPriceCacheRef.current = {
+        "EUR/USD": {
+          price: bases["EUR/USD"],
+          change: ((Math.random() - 0.5) * 0.2).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "GBP/USD": {
+          price: bases["GBP/USD"],
+          change: ((Math.random() - 0.5) * 0.25).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "XAU/USD": {
+          price: bases["XAU/USD"],
+          change: ((Math.random() - 0.5) * 0.3).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "USD/JPY": {
+          price: bases["USD/JPY"],
+          change: ((Math.random() - 0.5) * 0.15).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+      };
+      console.log("📅 Weekend started - Cached Friday's latest prices:", weekendPriceCacheRef.current);
+    }
+
+    // Also cache on Friday evening to ensure we have the latest prices
+    // This acts as a backup in case the transition detection doesn't work
+    if (isFridayDay && Object.keys(weekendPriceCacheRef.current).length === 0) {
+      weekendPriceCacheRef.current = {
+        "EUR/USD": {
+          price: bases["EUR/USD"],
+          change: ((Math.random() - 0.5) * 0.2).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "GBP/USD": {
+          price: bases["GBP/USD"],
+          change: ((Math.random() - 0.5) * 0.25).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "XAU/USD": {
+          price: bases["XAU/USD"],
+          change: ((Math.random() - 0.5) * 0.3).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+        "USD/JPY": {
+          price: bases["USD/JPY"],
+          change: ((Math.random() - 0.5) * 0.15).toFixed(2),
+          positive: Math.random() > 0.5,
+        },
+      };
+      console.log("📅 Friday - Cached latest prices for weekend:", weekendPriceCacheRef.current);
+    }
+
+    // Update the last checked day
+    lastWeekdayCheckRef.current = currentDay;
+
+    // Clear cache when weekend ends (Monday)
+    if (!isWeekendDay && currentDay === 1) {
+      weekendPriceCacheRef.current = {};
+      console.log("📅 Weekend ended - Cleared cache");
+    }
+
+    // Return cached data on weekend (Saturday/Sunday), live data on weekdays
+    if (isWeekendDay && Object.keys(weekendPriceCacheRef.current).length > 0) {
+      console.log("📅 Using cached Friday prices for weekend");
+      return weekendPriceCacheRef.current;
+    }
+
+    // Live data for weekdays
     return {
       "EUR/USD": {
         price: bases["EUR/USD"],
