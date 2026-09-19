@@ -379,7 +379,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }) {
           <div className="schip" onClick={() => setShowBotPopup(true)} style={{ cursor: "pointer" }}>
             <span className="dot dc"></span>
             {dashboardData?.[0]?.BotStatus?.toLowerCase()?.includes("inactive") ? (
-              <span style={{ color: "#ef4444", fontWeight: "bold" }}>{dashboardData?.[0]?.BotStatus}</span>
+              <span style={{ color: "#d4af37", fontWeight: "bold" }}>{dashboardData?.[0]?.BotStatus}</span>
             ) : (
               dashboardData?.[0]?.BotStatus || "BOT ACTIVE"
             )}
