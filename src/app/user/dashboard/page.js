@@ -873,7 +873,7 @@ export default function DashboardPage() {
 
   // Recent achievements — replace with API rows when available
   const recentAchievements = [
-    { title: `${dashboardData?.[0]?.News || 'V1'}`},
+    { title: `${dashboardData?.[0]?.News || 'V1'}` },
   ];
 
   return (
@@ -1165,14 +1165,14 @@ export default function DashboardPage() {
             </div>
           </div>
 
-           {/* NETWORK PERFORMANCE DASHBOARD */}
+          {/* NETWORK PERFORMANCE DASHBOARD */}
           <div className="dx-section-head mb-3">
             <h5 className="dx-section-title">Leadership Reward</h5>
             <div className="dx-section-sub">15-Day Team Performance</div>
           </div>
 
           <div className="quantum-network-dashboard mb-4">
-           
+
 
             {/* Adaptive Grid Chassis */}
             <div className="quantum-network-grid">
@@ -1310,7 +1310,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-         
+
 
           {/* INCOME OVERVIEW */}
           <div className="dx-section-head mb-3">
@@ -1429,8 +1429,8 @@ export default function DashboardPage() {
                       {shouldBotBeActive && <span className="dx-orb-pulse"></span>}
                     </div>
                     {/* <div> */}
-                      <div className="dx-card-title">Roventar AI Engine</div>
-                      {/* <div className="d-flex align-items-center gap-2 small dx-muted flex-wrap">
+                    <div className="dx-card-title">Roventar AI Engine</div>
+                    {/* <div className="d-flex align-items-center gap-2 small dx-muted flex-wrap">
                         <span>Uptime {formatElapsedTime(elapsedSeconds)}</span>
                       </div> */}
                     {/* </div> */}
@@ -1477,7 +1477,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                <button
+                {/* <button
                   className="btn dx-btn-primary w-100 py-2 fw-bold mb-2"
                   onClick={() => {
                     if (isKidFive && !shouldBotBeActive) {
@@ -1492,8 +1492,41 @@ export default function DashboardPage() {
                   {shouldBotBeActive ? '✔ Bot Active' :
                     (isKidFive ? <span style={{ color: "#8B0000", fontWeight: 900 }}>🔒 Bot Unavailable</span> :
                       (isKidOne ? '▶ Activate Bot' : '🔒 Not Available'))}
+                </button> */}
+                <button
+                  className="btn dx-btn-primary w-100 py-2 fw-bold mb-2"
+                  onClick={() => {
+                    if (isKidFive && !shouldBotBeActive) {
+                      setShowBuyPackagePopup(true);
+                    } else if (isKidOne && !shouldBotBeActive) {
+                      openBotFullPopup();
+                    }
+                  }}
+                  disabled={shouldBotBeActive || isKidFive || (!isKidOne && !isKidFive)}
+                  style={
+                    isKidFive
+                      ? {
+                        background: "#FFD700",
+                        backgroundImage: "none",
+                        color: "#000000",
+                        borderColor: "#FFD700",
+                        opacity: 1,
+                        cursor: "not-allowed",
+                        boxShadow: "none",
+                      }
+                      : { cursor: undefined }
+                  }
+                >
+                  {shouldBotBeActive ? (
+                    "✔ Bot Active"
+                  ) : isKidFive ? (
+                    <span style={{ color: "#000000", fontWeight: 900 }}>🔒 Bot Unavailable</span>
+                  ) : isKidOne ? (
+                    "▶ Activate Bot"
+                  ) : (
+                    "🔒 Not Available"
+                  )}
                 </button>
-
                 {shouldBotBeActive && (
                   <div className="dx-notif-bar" id="botNotif2">
                     <svg width="15" height="15" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
@@ -1683,7 +1716,7 @@ export default function DashboardPage() {
               <div className="dx-card h-100">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div className="dx-card-title"> 📢 Announcement</div>
-                  
+
                 </div>
                 <div className="d-flex flex-column gap-2">
                   {recentAchievements.map((a) => (
