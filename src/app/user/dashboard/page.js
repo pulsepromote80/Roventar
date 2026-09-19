@@ -1487,9 +1487,10 @@ export default function DashboardPage() {
                     }
                   }}
                   disabled={shouldBotBeActive || isKidFive || (!isKidOne && !isKidFive)}
+                   style={{ cursor: isKidFive ? "not-allowed" : undefined}}
                 >
                   {shouldBotBeActive ? '✔ Bot Active' :
-                    (isKidFive ? '🔒 Bot Unavailable' :
+                    (isKidFive ? <span style={{ color: "#8B0000", fontWeight: 900 }}>🔒 Bot Unavailable</span> :
                       (isKidOne ? '▶ Activate Bot' : '🔒 Not Available'))}
                 </button>
 
