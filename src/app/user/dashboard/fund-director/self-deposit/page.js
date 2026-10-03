@@ -169,7 +169,7 @@ export default function SelfDeposit() {
                       Processing
                     </>
                   ) : (
-                    "Deposit"
+                    "Submit"
                   )}
                 </button>
               </div>
