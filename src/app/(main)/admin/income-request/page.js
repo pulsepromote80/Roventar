@@ -15,7 +15,7 @@ import { ethers } from 'ethers'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
 
-const WithdrawalRequest = () => {
+const IncomeRequest = () => {
   const dispatch = useDispatch()
   const { withdrawRequestData, loading, error } = useSelector(
     (state) => state.fundManager,
@@ -553,11 +553,11 @@ const WithdrawalRequest = () => {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                Withdrawal Requests
+                Income Requests
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 flex items-center gap-2">
                 <RiWalletLine className="text-emerald-500" />
-                Manage and process withdrawal requests
+                Manage and process income requests
               </p>
             </div>
           </div>
@@ -699,7 +699,7 @@ const WithdrawalRequest = () => {
               <RiUserSearchLine className="text-xl" />
               Search Filters
             </h2>
-            <p className="text-emerald-100 text-sm mt-1">Filter withdrawal requests by date or user</p>
+            <p className="text-emerald-100 text-sm mt-1">Filter income requests by date or user</p>
           </div>
 
           <div className="p-6">
@@ -810,7 +810,7 @@ const WithdrawalRequest = () => {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
                 <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-500 dark:text-gray-400 font-medium">Loading withdrawal requests...</p>
+                <p className="mt-4 text-gray-500 dark:text-gray-400 font-medium">Loading income requests...</p>
               </div>
             ) : error ? (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
@@ -861,7 +861,7 @@ const WithdrawalRequest = () => {
                               <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                                 <FaHistory className="text-3xl text-gray-400" />
                               </div>
-                              <p className="text-gray-500 dark:text-gray-400 font-medium">No withdrawal requests found</p>
+                              <p className="text-gray-500 dark:text-gray-400 font-medium">No income requests found</p>
                             </div>
                           </td>
                         </tr>
@@ -873,11 +873,10 @@ const WithdrawalRequest = () => {
                             </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               <button
-                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-                                  processedRequests.has(row.Id)
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 shadow-md'
-                                }`}
+                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${processedRequests.has(row.Id)
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 shadow-md'
+                                  }`}
                                 onClick={() => handleApproveUSDTClick(row)}
                                 disabled={
                                   processedRequests.has(row.Id) ||
@@ -897,42 +896,41 @@ const WithdrawalRequest = () => {
                               >
                                 {processedRequests.has(row.Id) ? 'Approved' : 'Approve USDT'}
                               </button>
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               <button
-                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-                                  processedRequests.has(row.Id)
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-md'
-                                }`}
+                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${processedRequests.has(row.Id)
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-md'
+                                  }`}
                                 onClick={() => handleApproveClick(row.AuthLogin, row.Id)}
                                 disabled={processedRequests.has(row.Id)}
                                 title={processedRequests.has(row.Id) ? 'Already processed' : ''}
                               >
                                 {processedRequests.has(row.Id) ? 'Approved' : 'Approve'}
                               </button>
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm font-mono font-medium text-gray-900 dark:text-white">
                               {row.AuthLogin || '-'}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                               {row.FullName || '-'}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                               {row.CreatedDate ? row.CreatedDate.split('T')[0] : '-'}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                               ${row.TotWithdl}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                               ${row.AdminCharge}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm font-semibold text-blue-600 dark:text-blue-400">
                               ${row.Release}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 text-sm text-gray-600 dark:text-gray-400">
                               {row.Email || '-'}
-                             </td>
+                            </td>
                             <td className="px-3 py-3">
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-mono text-gray-600 dark:text-gray-400">
@@ -948,31 +946,30 @@ const WithdrawalRequest = () => {
                                   </button>
                                 )}
                               </div>
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400`}>
                                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
                                 {row.status || 'Pending'}
                               </span>
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                               {row.Remark || '-'}
-                             </td>
+                            </td>
                             <td className="px-3 py-3 whitespace-nowrap">
                               <button
-                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-                                  processedRequests.has(row.Id)
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-md'
-                                }`}
+                                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${processedRequests.has(row.Id)
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 shadow-md'
+                                  }`}
                                 onClick={() => handleRejectClick(row.AuthLogin, row.Id)}
                                 disabled={processedRequests.has(row.Id)}
                                 title={processedRequests.has(row.Id) ? 'Already processed' : 'Reject request'}
                               >
                                 {processedRequests.has(row.Id) ? 'Rejected' : 'Reject'}
                               </button>
-                             </td>
-                           </tr>
+                            </td>
+                          </tr>
                         ))
                       )}
                     </tbody>
@@ -1013,7 +1010,7 @@ const WithdrawalRequest = () => {
                             <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </button>
-                        
+
                         <div className="flex items-center gap-1">
                           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                             let pageNum;
@@ -1041,7 +1038,7 @@ const WithdrawalRequest = () => {
                             );
                           })}
                         </div>
-                        
+
                         <button
                           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                           disabled={currentPage === totalPages}
@@ -1061,7 +1058,7 @@ const WithdrawalRequest = () => {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                   <FaHistory className="text-3xl text-gray-400" />
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 font-medium">No withdrawal requests found</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">No income requests found</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Try adjusting your search criteria</p>
               </div>
             )}
@@ -1139,11 +1136,10 @@ const WithdrawalRequest = () => {
               </button>
               <button
                 onClick={handleReject}
-                className={`px-4 py-2 font-medium rounded-xl transition-all duration-200 shadow-md ${
-                  !remark.trim()
-                    ? 'bg-gray-400 text-white cursor-not-allowed'
-                    : 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700'
-                }`}
+                className={`px-4 py-2 font-medium rounded-xl transition-all duration-200 shadow-md ${!remark.trim()
+                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  : 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700'
+                  }`}
                 disabled={!remark.trim()}
               >
                 Submit Rejection
@@ -1156,4 +1152,4 @@ const WithdrawalRequest = () => {
   )
 }
 
-export default WithdrawalRequest
+export default IncomeRequest

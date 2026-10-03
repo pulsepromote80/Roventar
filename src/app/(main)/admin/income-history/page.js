@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import * as XLSX from "xlsx";
 import { saveAs } from 'file-saver';
 
-const WithdrawalHistory = () => {
+const IncomeHistory = () => {
   const dispatch = useDispatch();
   const { withdrawRequestData, loading, error } = useSelector((state) => state.fundManager);
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,12 +122,12 @@ const WithdrawalHistory = () => {
     : allRows;
 
   const filteredRows = filteredByStatus.filter(row =>
-    (row.AuthLogin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.FullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (row.TotWithdl?.toString().includes(searchTerm)) ||
-      (row.debit?.toString().includes(searchTerm)) ||
-      row.TransHash?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.CreatedDate?.toLowerCase().includes(searchTerm.toLowerCase()))
+  (row.AuthLogin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.FullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (row.TotWithdl?.toString().includes(searchTerm)) ||
+    (row.debit?.toString().includes(searchTerm)) ||
+    row.TransHash?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    row.CreatedDate?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   const rowsToDisplay = filteredRows;
   const paginatedRows = rowsToDisplay.slice(
@@ -172,11 +172,11 @@ const WithdrawalHistory = () => {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                Withdrawal History
+                Income History
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 flex items-center gap-2">
                 <RiWalletLine className="text-emerald-500" />
-                View and manage all withdrawal requests
+                View and manage all income requests
               </p>
             </div>
           </div>
@@ -250,7 +250,7 @@ const WithdrawalHistory = () => {
               <RiUserSearchLine className="text-xl" />
               Search Filters
             </h2>
-            <p className="text-emerald-100 text-sm mt-1">Filter withdrawal history by date, user, or status</p>
+            <p className="text-emerald-100 text-sm mt-1">Filter income history by date, user, or status</p>
           </div>
 
           <div className="p-6">
@@ -383,7 +383,7 @@ const WithdrawalHistory = () => {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
                 <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-500 dark:text-gray-400 font-medium">Loading withdrawal history...</p>
+                <p className="mt-4 text-gray-500 dark:text-gray-400 font-medium">Loading income history...</p>
               </div>
             ) : error ? (
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center">
@@ -505,17 +505,15 @@ const WithdrawalHistory = () => {
                               {row.Remark || '-'}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap">
-                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                                row.status === 'Approved'
-                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                  : row.status === 'Rejected'
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${row.status === 'Approved'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                : row.status === 'Rejected'
                                   ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                   : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                              }`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${
-                                  row.status === 'Approved' ? 'bg-green-500' : 
+                                }`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${row.status === 'Approved' ? 'bg-green-500' :
                                   row.status === 'Rejected' ? 'bg-red-500' : 'bg-yellow-500'
-                                }`}></span>
+                                  }`}></span>
                                 {row.status || 'Pending'}
                               </span>
                             </td>
@@ -560,7 +558,7 @@ const WithdrawalHistory = () => {
                             <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </button>
-                        
+
                         <div className="flex items-center gap-1">
                           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                             let pageNum;
@@ -588,7 +586,7 @@ const WithdrawalHistory = () => {
                             );
                           })}
                         </div>
-                        
+
                         <button
                           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                           disabled={currentPage === totalPages}
@@ -609,7 +607,7 @@ const WithdrawalHistory = () => {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
                   <FaHistory className="text-3xl text-gray-400" />
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 font-medium">No withdrawal history found</p>
+                <p className="text-gray-500 dark:text-gray-400 font-medium">No income history found</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Try adjusting your search criteria</p>
               </div>
             )}
@@ -620,4 +618,4 @@ const WithdrawalHistory = () => {
   );
 };
 
-export default WithdrawalHistory;
+export default IncomeHistory;

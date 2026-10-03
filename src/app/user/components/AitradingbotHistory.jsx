@@ -25,7 +25,7 @@ import {
   Moon,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getRechargetransactionHIstory,addWithdrawalPrinciple } from "@/app/redux/slices/fundManagerSlice";
+import { getRechargetransactionHIstory, addWithdrawalPrinciple } from "@/app/redux/slices/fundManagerSlice";
 import { getUserId } from "@/app/api/auth";
 import toast from "react-hot-toast";
 
@@ -860,6 +860,9 @@ const styles = `
 
 function HistoryCard({ transaction, index, onRefresh }) {
 
+
+  console.log("🚀 ~ file: AitradingbotHistory.jsx:13 ~ HistoryCard ~ transaction:", transaction)
+
   const dispatch = useDispatch();
   const getStatus = () => {
     return { label: 'Active', class: 'success' };
@@ -937,7 +940,7 @@ function HistoryCard({ transaction, index, onRefresh }) {
     return `$${num.toFixed(2)}`;
   };
 
-  
+
   // Format ROI
   const formatROI = (roi) => {
     if (!roi && roi !== 0) return '0%';
@@ -1121,9 +1124,9 @@ function HistoryCard({ transaction, index, onRefresh }) {
             </div>
 
             <div className="sb-modal-info-box">
-                <div className="sb-modal-info-label">Net Amount</div>
-                <div className="sb-modal-info-value sb-modal-info-value-large">
-                {formatAmount(transaction.Rkprice * 0.85)}
+              <div className="sb-modal-info-label">Net Amount</div>
+              <div className="sb-modal-info-value sb-modal-info-value-large">
+                {formatAmount(transaction.Rkprice * 0.83)}
               </div>
             </div>
 
@@ -1166,9 +1169,9 @@ function HistoryCard({ transaction, index, onRefresh }) {
                       toast.error('Remark is required');
                       return;
                     }
-                    
+
                     setIsWithdrawing(true);
-                    
+
                     const withdrawalData = {
                       remark: remark,
                       rechargeid: transaction.RechargeId || transaction.id || transaction.rechargeid || ''
@@ -1180,7 +1183,7 @@ function HistoryCard({ transaction, index, onRefresh }) {
                       toast.success(result.message);
                       setShowWithdrawalModal(false);
                       setRemark('');
-                      
+
                       if (onRefresh) {
                         onRefresh();
                       }

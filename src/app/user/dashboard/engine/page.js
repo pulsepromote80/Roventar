@@ -589,13 +589,13 @@ export default function ArbionEngine() {
                     AI MEV + cross-chain arb · 24 autonomous — Auto-updates
                   </div>
                 </div>
-             
+
               </div>
 
               {/* Stats - No Price Section Here */}
               <div className="stats-grid">
                 <div className={`scard stat-card ${flashEffect.profit ? 'flash-update-slow' : ''}`}>
-                  <div className="stat-label">Total Profit</div>
+                  <div className="stat-label">TOTAL VOLUME</div>
                   <div className="stat-value stat-value-primary">
                     <AnimatedCounter value={totalProfit} prefix="$" decimals={2} />
                   </div>
