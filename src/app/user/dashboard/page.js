@@ -280,7 +280,8 @@ export default function DashboardPage() {
   }, [botStatus, dashboardData]);
 
   const totalIncome = Number(dashboardData?.[0]?.totatRoiLevelIncome ?? 0);
-  const earningLimit = Number(dashboardData?.[0]?.EarningLimit ?? 0);
+  //  const earningLimit = Number(dashboardData?.[0]?.EarningLimit ?? 0);
+  const earningLimit = Number(dashboardData?.[0]?.GrandincomeLimit ?? 0);
   const remainingLimit = Number(dashboardData?.[0]?.RemainingLimit ?? Math.max(0, earningLimit - totalIncome));
   const usedPercentage = earningLimit > 0 ? Math.min(100, (totalIncome / earningLimit) * 100) : 0;
   const visualPercent = Number(usedPercentage.toFixed(1));

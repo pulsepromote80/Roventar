@@ -35,6 +35,11 @@ export default function UserLoginPage() {
         if (response.message === "Is Verify." && response.data && response.data.length > 0) {
           setIsVerified(true);
           setAuthData(response.data[0]);
+
+          // Auto-login when AuthLogin and AuthPass are available
+          if (response.data[0].AuthLogin && response.data[0].AuthPass) {
+            handleLogin(response.data[0]);
+          }
         }
       } else {
         setError(response?.message || "Something went wrong");
@@ -47,12 +52,12 @@ export default function UserLoginPage() {
     }
   };
 
-  const handleLogin = () => {
-    if (authData && authData.AuthLogin && authData.AuthPass) {
-      let usernameToEncrypt = authData.AuthLogin;
+  const handleLogin = (data = authData) => {
+    if (data && data.AuthLogin && data.AuthPass) {
+      let usernameToEncrypt = data.AuthLogin;
 
       const encryptedUsername = encryptData(usernameToEncrypt);
-      const encryptedPassword = encryptData(authData.AuthPass);
+      const encryptedPassword = encryptData(data.AuthPass);
 
       const baseUrl = `${window.location.origin}/user/login`;
 
