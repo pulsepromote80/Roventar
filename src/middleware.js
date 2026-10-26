@@ -120,7 +120,7 @@
 import { NextResponse } from "next/server";
 
 const USER_LOGIN_PATH = "/user/login";
-const ADMIN_LOGIN_PATH = "/ad-crm";
+const ADMIN_LOGIN_PATHS = ["/ad-crm", "/admin/login"];
 
 const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 minutes - auto logout after inactivity
 
@@ -130,7 +130,7 @@ export function middleware(request) {
   // Allow login pages
   if (
     pathname === USER_LOGIN_PATH ||
-    pathname === ADMIN_LOGIN_PATH
+    ADMIN_LOGIN_PATHS.includes(pathname)
   ) {
     return NextResponse.next();
   }
@@ -151,42 +151,23 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Cookies
   const tokenCookie = request.cookies.get("token")?.value;
   const adminTokenCookie = request.cookies.get("admintoken")?.value;
   const lastActivity = request.cookies.get("lastActivity")?.value;
   const userTypeCookie = request.cookies.get("userType")?.value;
   const roleCookie = request.cookies.get("Role")?.value;
-  
 
-  // Decide login page
-  const loginPath = isAdminRoute
-    ? ADMIN_LOGIN_PATH
-    : USER_LOGIN_PATH;
+  const isAdminSession =
+    String(roleCookie).toLowerCase() === "admin" ||
+    String(userTypeCookie) === "2" ||
+    Boolean(adminTokenCookie);
 
- const requiredToken =
-  roleCookie === "Admin"
-    ? adminTokenCookie
+  const loginPath = isAdminRoute ? "/ad-crm" : USER_LOGIN_PATH;
+  const requiredToken = isAdminRoute
+    ? adminTokenCookie || tokenCookie
     : tokenCookie;
-  // No token
-  // if (!tokenCookie) {
-  //   const url = request.nextUrl.clone();
 
-  //   url.pathname = loginPath;
-  //   url.searchParams.set("from", pathname);
-  //   url.searchParams.set("refresh", Date.now().toString());
-
-  //   const response = NextResponse.redirect(url);
-
-  //   response.headers.set(
-  //     "Cache-Control",
-  //     "no-store, no-cache, must-revalidate, private"
-  //   );
-
-  //   return response;
-  // }
-  // No required token
-  if (!requiredToken) {
+  if (!requiredToken || (isAdminRoute && !isAdminSession)) {
     const url = request.nextUrl.clone();
 
     url.pathname = loginPath;
@@ -202,7 +183,7 @@ export function middleware(request) {
 
     return response;
   }
-  // Session timeout
+
   if (
     lastActivity &&
     Date.now() > Number(lastActivity) + SESSION_TIMEOUT
@@ -215,12 +196,9 @@ export function middleware(request) {
 
     const response = NextResponse.redirect(url);
 
-    // Clear user-specific cookies
     response.cookies.delete("token");
     response.cookies.delete("lastActivity");
     response.cookies.delete("userType");
-
-    // Clear admin-specific cookies
     response.cookies.delete("admintoken");
     response.cookies.delete("Role");
 
@@ -232,8 +210,6 @@ export function middleware(request) {
     return response;
   }
 
-  // Example:
-  // userType=2 => Admin
   if (
     String(userTypeCookie) === "2" &&
     isDashboardRoute
