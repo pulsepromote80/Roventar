@@ -192,6 +192,7 @@ const AllUsers = () => {
     srNo: idx + 1,
     AuthLogin: item.AuthLogin || '',
     Name: item.Name || '',
+    SponsorID: item.SponsorID || '',
     Mobile: item.Mobile || '',
     Email: item.Email || '',
     WalletAddress: item.WalletAddress || '',
@@ -504,6 +505,7 @@ const AllUsers = () => {
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">#</th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">User Login</th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">SponsorId & Name</th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Mobile</th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Email</th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Wallet Address</th>
@@ -546,6 +548,12 @@ const AllUsers = () => {
                               <div className="flex items-center gap-2">
                                 <FaUserCircle className="text-gray-400 text-sm" />
                                 <span className="text-sm text-gray-700 dark:text-gray-300">{row.Name}</span>
+                              </div>
+                             </td>
+                             <td className="px-4 py-3 whitespace-nowrap">
+                              <div className="flex items-center gap-2">
+                                <FaUserCircle className="text-gray-400 text-sm" />
+                                <span className="text-sm text-gray-700 dark:text-gray-300">{row.SponsorID}</span>
                               </div>
                              </td>
                             <td className="px-4 py-3 whitespace-nowrap">
