@@ -3,7 +3,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 // Color helper functions - Dark text on white background
 const G = (text) => `<span class="text-gold">${text}</span>`;
@@ -235,14 +234,10 @@ export default function CryptoTerminal() {
     }
 
     try {
-      const token = Cookies.get("token");
       const response = await axios.get(
-        "https://apis.abrixlabs.live/api/Authentication/getAllTransactionLog",
+        "/api/transaction-log?source=crypto-terminal",
         {
           timeout: 30000,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
       if (response.status === 200 && response.data && response.data.data) {

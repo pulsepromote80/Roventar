@@ -385,13 +385,10 @@ export default function ArbionEngine() {
 
   const fetchTransactionLog = useCallback(async () => {
     try {
-      const response = await fetch(
-        'https://apis.abrixlabs.live/api/Authentication/getAllTransactionLog_xoxo',
-        {
-          headers: { 'Content-Type': 'application/json' },
-          cache: 'no-cache',
-        }
-      );
+      const response = await fetch('/api/transaction-log', {
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-cache',
+      });
       const result = await response.json();
 
       if (result.statusCode === 200 && result.data?.length > 0 && isMounted.current) {
