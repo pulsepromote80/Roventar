@@ -163,6 +163,10 @@ button:focus {
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
+  background: var(--bg-2) !important;
+  color: var(--text-1) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .react-hot-toast .toast:not(.showing):not(.show) {
