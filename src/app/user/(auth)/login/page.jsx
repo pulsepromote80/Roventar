@@ -18,17 +18,45 @@ const TRACK_WIDTH = PUZZLE_WIDTH - PIECE_SIZE
 const TOLERANCE = 6
 
 
-const getRandomPuzzleImage = () => {
-  const uniqueSeed = `${Date.now()}-${Math.floor(Math.random() * 100000)}`
-  return `https://picsum.photos/seed/${uniqueSeed}/${PUZZLE_WIDTH}/${PUZZLE_HEIGHT}`
-}
+// ✅ FIX: Local canvas-generated image (no external dependency, no CORS, instant load)
+const generatePuzzleImage = () => {
+  const canvas = document.createElement("canvas")
+  canvas.width = PUZZLE_WIDTH
+  canvas.height = PUZZLE_HEIGHT
+  const ctx = canvas.getContext("2d")
 
+  // Random gradient background
+  const hue1 = Math.floor(Math.random() * 360)
+  const hue2 = (hue1 + 40 + Math.floor(Math.random() * 80)) % 360
+  const grad = ctx.createLinearGradient(0, 0, PUZZLE_WIDTH, PUZZLE_HEIGHT)
+  grad.addColorStop(0, `hsl(${hue1}, 70%, 45%)`)
+  grad.addColorStop(0.5, `hsl(${(hue1 + hue2) / 2}, 65%, 35%)`)
+  grad.addColorStop(1, `hsl(${hue2}, 75%, 25%)`)
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, PUZZLE_WIDTH, PUZZLE_HEIGHT)
 
-const preloadImage = (url, onLoaded) => {
-  const img = new Image()
-  img.onload = () => onLoaded(url)
-  img.onerror = () => onLoaded(url)
-  img.src = url
+  // Random decorative shapes (dots, circles)
+  for (let i = 0; i < 30; i++) {
+    ctx.beginPath()
+    const x = Math.random() * PUZZLE_WIDTH
+    const y = Math.random() * PUZZLE_HEIGHT
+    const r = Math.random() * 18 + 3
+    ctx.arc(x, y, r, 0, Math.PI * 2)
+    ctx.fillStyle = `hsla(${Math.random() * 360}, 80%, 70%, ${Math.random() * 0.35 + 0.1})`
+    ctx.fill()
+  }
+
+  // Some lines for extra texture
+  for (let i = 0; i < 10; i++) {
+    ctx.beginPath()
+    ctx.moveTo(Math.random() * PUZZLE_WIDTH, Math.random() * PUZZLE_HEIGHT)
+    ctx.lineTo(Math.random() * PUZZLE_WIDTH, Math.random() * PUZZLE_HEIGHT)
+    ctx.strokeStyle = `hsla(0, 0%, 100%, ${Math.random() * 0.15 + 0.05})`
+    ctx.lineWidth = Math.random() * 3 + 1
+    ctx.stroke()
+  }
+
+  return canvas.toDataURL("image/png")
 }
 
 export default function LoginPage() {
@@ -43,7 +71,7 @@ export default function LoginPage() {
   const [validationErrors, setValidationErrors] = useState({ username: "", password: "", captcha: "" })
 
   // ---- Puzzle captcha state ----
-  const [puzzleImage, setPuzzleImage] = useState(() => getRandomPuzzleImage())
+  const [puzzleImage, setPuzzleImage] = useState("")
   const [isImageLoading, setIsImageLoading] = useState(true)
   const [pieceTopPos, setPieceTopPos] = useState(20)
   const [targetX, setTargetX] = useState(150)
@@ -218,17 +246,16 @@ export default function LoginPage() {
     setIsVerified(false)
     setIsFailed(false)
 
-    // Loader dikhao tab tak jab nayi image fully load nahi ho jaati
-    setIsImageLoading(true)
-    const newUrl = getRandomPuzzleImage()
-    preloadImage(newUrl, (loadedUrl) => {
-      setPuzzleImage(loadedUrl)
-      setIsImageLoading(false)
-    })
+    // ✅ FIX: Instant local image, no preload needed (no CORS, no network hang)
+    if (typeof window !== "undefined") {
+      setPuzzleImage(generatePuzzleImage())
+    }
+    setIsImageLoading(false)
   }
 
   useEffect(() => {
     generatePuzzle()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleDragStart = (clientX) => {
